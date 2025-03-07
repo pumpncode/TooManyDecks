@@ -1,0 +1,13 @@
+{
+    "Lua.diagnostics.disable": [
+        "lowercase-global",
+        "need-check-nil",
+        "undefined-field",
+        "undefined-global",
+        "unused-local"
+    ],
+    "Lua.workspace.library": [
+        "../smods-1.0.0-beta-0305c",
+        "../lovely/dump"
+    ]
+}
