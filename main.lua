@@ -10,6 +10,12 @@ SMODS.Atlas {
 	py = 95,
 	path = "sleeves.png"
 }
+SMODS.Atlas {
+	key = "modicon",
+	px = 32,
+	py = 32,
+	path = "modicon.png"
+}
 
 
 SMODS.Back {
