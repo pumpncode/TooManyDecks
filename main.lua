@@ -343,6 +343,7 @@ SMODS.Back {
 		text = {"You start with 1",
 		"card in your deck",
 		"{X:mult,C:white}X0.5{} Mult",
+		"Start at {C:attention}ante 0{}","Start with a {T:j_popcorn}popcorn{}",
 		"{s:2.0}Fuck You{}"},
 		unlock = {"{C:green}#1# in 15{} chance this","deck unlock when","losing a run"}
 	},
@@ -357,10 +358,16 @@ SMODS.Back {
 	pos = { x = 0, y = 2},
 	
 	apply = function(self)
-
+		
 
         G.E_MANAGER:add_event(Event({
             func = function()
+				SMODS.add_card { key = 'j_popcorn' }
+				local ante_UI = G.hand_text_area.ante
+				G.GAME.round_resets.ante = 0
+				G.GAME.round_resets.ante_disp = number_format(G.GAME.round_resets.ante)
+				ante_UI.config.object:update()
+				G.HUD:recalculate()
             	local newcards = {}
                 for i = 1, #G.playing_cards do
   					local card = G.playing_cards[1]
@@ -368,7 +375,7 @@ SMODS.Back {
 					card:remove()
                     
                 end
-                card = create_playing_card(nil,G.deck)
+                card = create_playing_card({front = G.P_CARDS.S_K},G.deck)
                 return true
             end
         }))
@@ -425,7 +432,7 @@ SMODS.Back {
 		text = {
 			"{C:blue}+1{} hand {C:red}+1{} discard",
 			"{C:attention}+2{} hand size",
-			"Start with extra {C:yellow}$10{}",
+			"Start with extra {C:money}$10{}",
 			"{X:mult,C:white}X1.4{} base Blind size",
 			"{C:red}-1{} consumeable slot",
 			"Earn no {C:attention}Interest{}"
@@ -438,23 +445,18 @@ SMODS.Back {
 		end
 	end,
 	unlocked = false,
-	config = {hands = 1, discards = 1,hand_size = 2, consumable_slot = -1,no_interest = true,ante_scaling = 1.4},
+	config = {hands = 1, discards = 1,hand_size = 2, consumable_slot = -1,no_interest = true,ante_scaling = 1.4, dollars = 10},
 	atlas = "decks",
-	pos = { x = 0, y = 3},
-	
-	apply = function(self,back)
-		ease_dollars(10)
-		
-		
-	end
+	pos = { x = 0, y = 3}
 }
+
 
 SMODS.Back {
 	key = "storage",
 	loc_txt = {
 		name = "Storage Deck",
-		text = {"Any playing cards destroyed",
-					"are duplicated twice",
+		text = {"Any playing cards destroyed in ",
+					"a shop are duplicated twice",
 				"Create a {T:e_negative,C:dark_edition}Negative{} {T:c_hanged_man,C:tarot}Hanged Man{}",
 				"after boss blind defeated"},
 				unlock = {"Create and destroy a card","in one hand"}
@@ -494,7 +496,7 @@ SMODS.Back {
 
 			}))
 		end
-		if context.remove_playing_cards then
+		if context.remove_playing_cards and not G.GAME.blind.in_blind then
 			G.E_MANAGER:add_event(Event({
 				func = function()
 					local newcards = {}
@@ -839,5 +841,180 @@ SMODS.Rank {
 	next = {"SGTMD_BJack"},
 	in_pool = function (self, args)
 		return false
+	end
+}
+
+
+
+--- BUNO END!!!!!!!
+
+
+local flip_ref = Card.update
+function Card:update(dt)
+	local ret = flip_ref(self,dt)
+
+	if self.ability.SGTMD_PermaFlip and (self.area == G.hand or self.area == G.jokers) then
+		self.flipping = "f2b"
+        self.facing='back'
+        self.sprite_facing = 'back'
+		self.pinch.x = false
+	end
+	return ret
+end
+
+local emplace_ref = CardArea.emplace
+function CardArea:emplace(card, location, stay_flipped)
+		local ret = emplace_ref(self, card, location, stay_flipped)
+
+		if G.GAME.selected_back.effect.center.key == "b_SGTMD_invisible" and (card.area == G.hand or card.area == G.jokers)  then
+			card.ability.SGTMD_PermaFlip = true
+			
+		else
+			card.ability.SGTMD_PermaFlip = false
+		end
+
+	return ret
+end
+
+
+SMODS.Back {
+	key = "invisible",
+	loc_txt = {
+		name = "invisible Deck",
+		text = {"All cards are flipped",
+					"Create a {T:e_negative,C:dark_edition}negative{} copy","of rightmost joker when blind selected"}
+	},
+	atlas = "decks",
+	pos = {x=3,y=3},
+	calculate = function (self, card, context)
+		if context.setting_blind and #G.jokers.cards > 0 then
+			G.E_MANAGER:add_event(Event({
+				func = function()
+					local card = copy_card(G.jokers.cards[1], nil)
+					card:set_edition({ negative = true }, true)
+					card.children.back.sprite_pos = G.jokers.cards[1].children.back.sprite_pos
+					card:add_to_deck()
+					G.jokers:emplace(card)
+					return true
+				end
+			}))
+		end
+	end
+}
+
+
+SMODS.Back {
+	key = "betrayal",
+	loc_txt = {
+		name = "Deck of Betrayal",
+		text = {"Start run with",
+					"{C:attention}26{} {C:hearts}Hearts{} and",
+				"{C:attention}26{} {C:diamonds}Diamonds{} in deck",
+			"Kings are replaced with Jacks",
+		"{C:blue}-1{} hand every round"},
+		unlock = {"Win a run with","{C:attention}Black Deck{}","on any difficulty"}
+	},
+	config = {hands = -1},
+	atlas = "decks",
+	pos = { x = 4, y = 0},
+	check_for_unlock = function(self,args)
+		if args.type == "win_deck" and G.GAME.selected_back.effect.center.key == "b_black" then
+			return true
+	end
+	end,
+	apply = function(self)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				for _, card in ipairs(G.playing_cards) do
+					if card.base.value == "King"then
+						assert(SMODS.change_base(card, nil, "Jack"))
+					end
+					if card:is_suit("Clubs") then
+						assert(SMODS.change_base(card, "Diamonds"))
+					end
+					if card:is_suit("Spades") then
+						assert(SMODS.change_base(card, "Hearts"))
+					end
+				end
+			return true
+		   end
+		}))
+	end
+}
+
+SMODS.Back {
+	key = "blackboard",
+	loc_txt = {
+		name = "Blackboard Deck",
+		text = {"Start run with",
+					"{C:attention}26{} {C:spades}Spades{} and",
+				"{C:attention}26{} {C:clubs}Clubs{} in deck",
+		"{C:red}-1{} discard every round"},
+		unlock = {"Win a run with","{C:attention}Black Deck{}","on any difficulty"}
+	},
+	config = {discards = -1},
+	atlas = "decks",
+	pos = { x = 4, y = 1},
+	check_for_unlock = function(self,args)
+		if args.type == "win_deck" and G.GAME.selected_back.effect.center.key == "b_black" then
+			return true
+	end
+	end,
+	apply = function(self)
+		G.E_MANAGER:add_event(Event({
+			func = function()
+				for _, card in ipairs(G.playing_cards) do
+					if card:is_suit("Diamonds") then
+						assert(SMODS.change_base(card, "Clubs"))
+					end
+					if card:is_suit("Hearts") then
+						assert(SMODS.change_base(card, "Spades"))
+					end
+				end
+			return true
+		   end
+		}))
+	end
+}
+
+
+SMODS.Back {
+	key = "letsgogambling!!!!!",
+	loc_txt = {
+		name = "Gambler's Deck",
+		text = {
+			"Gain {C:money}$1{} for every","{C:chips}500{} base chips scored",
+			"{s:0.75}(chips before multiplication)",
+			"Small and Big Blinds cost {C:money}$5{}",
+			"Boss Blinds cost {C:money}$7{}",
+			"All Buy-ins return 2 to 1"
+		}
+	},
+
+	atlas = "decks",
+	pos = { x = 1, y = 3},
+	calculate = function (self,card,context)
+		if context.final_scoring_step then
+			if math.floor(hand_chips.array[1]/500) > 0 then
+			return {dollars = math.floor(hand_chips.array[1]/500) }
+			end
+		end
+		if context.setting_blind then
+			if G.GAME.blind.boss then
+				G.GAME.SGTMD_GD_B = 7
+				
+			elseif context.blind == "bl_pvp" then
+				G.GAME.SGTMD_GD_B = 10
+			else
+				G.GAME.SGTMD_GD_B = 5
+			end
+			if G.GAME.dollars.array[1] - G.GAME.SGTMD_GD_B < 0 then
+				G.GAME.SGTMD_GD_B = G.GAME.SGTMD_GD_B - (G.GAME.SGTMD_GD_B - G.GAME.dollars.array[1])
+			end
+			return { dollars = 0-G.GAME.SGTMD_GD_B}
+		end
+		if context.end_of_round and not context.individual and not context.repetition then
+			return{dollars = G.GAME.SGTMD_GD_B * 2}
+		end
 	end
 }
