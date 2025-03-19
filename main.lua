@@ -26,7 +26,7 @@ SMODS.Back {
 		unlock = {"Score naneinf or higher"}
 	},
 	check_for_unlock = function(self, args)
-		if args.type == "chip_score" and args.chips >= 1.8*10^308 then
+		if args.type == "chip_score" and args.chips.array[1] >= 1.8*10^308 then
 			return true
 		end
 	end,
@@ -880,9 +880,9 @@ end
 SMODS.Back {
 	key = "invisible",
 	loc_txt = {
-		name = "invisible Deck",
+		name = "Invisible Deck",
 		text = {"All cards are flipped",
-					"Create a {T:e_negative,C:dark_edition}negative{} copy","of rightmost joker when blind selected"}
+					"Create a {T:e_negative,C:dark_edition}negative{} copy","of leftmost joker when blind selected"}
 	},
 	atlas = "decks",
 	pos = {x=3,y=3},
@@ -949,6 +949,7 @@ SMODS.Back {
 		text = {"Start run with",
 					"{C:attention}26{} {C:spades}Spades{} and",
 				"{C:attention}26{} {C:clubs}Clubs{} in deck",
+				"2s are replaced with Aces",
 		"{C:red}-1{} discard every round"},
 		unlock = {"Win a run with","{C:attention}Black Deck{}","on any difficulty"}
 	},
@@ -964,6 +965,9 @@ SMODS.Back {
 		G.E_MANAGER:add_event(Event({
 			func = function()
 				for _, card in ipairs(G.playing_cards) do
+					if card.base.value == "2"then
+						assert(SMODS.change_base(card, nil, "Ace"))
+					end
 					if card:is_suit("Diamonds") then
 						assert(SMODS.change_base(card, "Clubs"))
 					end
