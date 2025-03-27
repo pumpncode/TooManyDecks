@@ -1,4 +1,4 @@
-SMODS.Atlas {
+deckstext = SMODS.Atlas {
 	key = "decks",
 	px = 71,
 	py = 95,
@@ -15,6 +15,40 @@ SMODS.Atlas {
 	px = 32,
 	py = 32,
 	path = "modicon.png"
+}
+
+SMODS.Atlas {
+	key = "thedeckblind",
+	px = 34,
+	py = 34,
+	atlas_table = 'ANIMATION_ATLAS',
+	path = "deckblind.png",
+	frames = 21
+}
+
+
+
+TMD = {}
+
+
+
+
+TMD.splashpos = {{x=5,y=0},{x=1,y=0},{x=2,y=0},{x=3,y=0},{x=4,y=0},
+							  {x=0,y=1},{x=1,y=1},{x=2,y=1},{x=3,y=1},{x=4,y=1},
+							  {x=0,y=2},{x=4,y=2},{x=4,y=3},
+							  {x=0,y=3},{x=1,y=3},{x=3,y=3}}
+
+
+
+SMODS.Blind {
+	key = "deckblind",
+	loc_txt = {
+		name = "The Deck",
+		text = {"You lost to the deck"}
+	},
+	atlas = "thedeckblind",
+	unlocked = false,
+	no_collection = true
 }
 
 
@@ -605,7 +639,7 @@ SMODS.Back {
 	end,
 	calculate = function (self,card,context)
 	
-			if context.individual and context.other_card.area == G.play then
+			if context.individual and context.cardarea == G.play then
 				if context.other_card.base.value == "SGTMD_BJack" then
 					G.GAME.current_round.discards_left = 1 + G.GAME.current_round.discards_left
 				elseif context.other_card.base.value == "SGTMD_BQueen" then
@@ -628,229 +662,12 @@ SMODS.Back {
 	end
 }
 
-
--- -------------------------------------BUNO!!!!-------------------------------------
-
-SMODS.Atlas {
-	key = "hcbunocards",
-	px = 71,
-	py = 95,
-	path = "buno2.png"
-}
-
-SMODS.Atlas {
-	key = "bunocards",
-	px = 71,
-	py = 95,
-	path = "buno1.png"
-}
-
-
-
-SMODS.Rank {
-	key = "BAce",
-	card_key = "BAce",
-	pos = {x=12},
-	lc_atlas = "bunocards",
-	hc_atlas = "hcbunocards",
-	loc_txt = {name = "One"},
-	shorthand = "A",
-	face_nominal = 1,
-	nominal = 1,
-	next = {"SGTMD_B2"},
-	in_pool = function (self, args)
-		return false
-	end
-}
-
-SMODS.Rank {
-	key = "B2",
-	card_key = "B2",
-	pos = {x=0},
-	lc_atlas = "bunocards",
-	hc_atlas = "hcbunocards",
-	loc_txt = {name = "Two"},
-	shorthand = "2",
-	nominal = 2,
-	next = {"SGTMD_B3"},
-	in_pool = function (self, args)
-		return false
-	end
-}
-
-SMODS.Rank {
-	key = "B3",
-	card_key = "B3",
-	pos = {x=1},
-	lc_atlas = "bunocards",
-	hc_atlas = "hcbunocards",
-	loc_txt = {name = "Three"},
-	shorthand = "3",
-	nominal = 3,
-	next = {"SGTMD_B4"},
-	in_pool = function (self, args)
-		return false
-	end
-}
-
-SMODS.Rank {
-	key = "B4",
-	card_key = "B4",
-	pos = {x=2},
-	lc_atlas = "bunocards",
-	hc_atlas = "hcbunocards",
-	loc_txt = {name = "Four"},
-	shorthand = "4",
-	nominal = 4,
-	next = {"SGTMD_B5"},
-	in_pool = function (self, args)
-		return false
-	end
-}
-
-SMODS.Rank {
-	key = "B5",
-	card_key = "B5",
-	pos = {x=3},
-	lc_atlas = "bunocards",
-	hc_atlas = "hcbunocards",
-	loc_txt = {name = "Five"},
-	shorthand = "5",
-	nominal = 5,
-	next = {"SGTMD_B6"},
-	in_pool = function (self, args)
-		return false
-	end
-}
-
-SMODS.Rank {
-	key = "B6",
-	card_key = "B6",
-	pos = {x=4},
-	lc_atlas = "bunocards",
-	hc_atlas = "hcbunocards",
-	loc_txt = {name = "Six"},
-	shorthand = "6",
-	nominal = 6,
-	next = {"SGTMD_B7"},
-	in_pool = function (self, args)
-		return false
-	end
-}
-
-SMODS.Rank {
-	key = "B7",
-	card_key = "B7",
-	pos = {x=5},
-	lc_atlas = "bunocards",
-	hc_atlas = "hcbunocards",
-	loc_txt = {name = "Seven"},
-	shorthand = "7",
-	nominal = 7,
-	next = {"SGTMD_B8"},
-	in_pool = function (self, args)
-		return false
-	end
-}
-
-SMODS.Rank {
-	key = "B8",
-	card_key = "B8",
-	pos = {x=6},
-	lc_atlas = "bunocards",
-	hc_atlas = "hcbunocards",
-	loc_txt = {name = "Eight"},
-	shorthand = "8",
-	nominal = 8,
-	next = {"SGTMD_B9"},
-	in_pool = function (self, args)
-		return false
-	end
-}
-
-SMODS.Rank {
-	key = "B9",
-	card_key = "B9",
-	pos = {x=7},
-	lc_atlas = "bunocards",
-	hc_atlas = "hcbunocards",
-	loc_txt = {name = "Nine"},
-	shorthand = "9",
-	nominal = 9,
-	next = {"SGTMD_B10"},
-	in_pool = function (self, args)
-		return false
-	end
-}
-
-SMODS.Rank {
-	key = "B10",
-	card_key = "B10",
-	pos = {x=8},
-	lc_atlas = "bunocards",
-	hc_atlas = "hcbunocards",
-	loc_txt = {name = "Zero"},
-	shorthand = "0",
-	nominal = 1,
-	face_nominal = 0,
-	next = {"SGTMD_BAce"},
-	in_pool = function (self, args)
-		return false
-	end
-}
-
-SMODS.Rank {
-	key = "BJack",
-	card_key = "BJack",
-	pos = {x=9},
-	lc_atlas = "bunocards",
-	hc_atlas = "hcbunocards",
-	loc_txt = {name = "Skip"},
-	shorthand = "S",
-	nominal = 10,
-	next = {"SGTMD_BQueen"},
-	in_pool = function (self, args)
-		return false
-	end
-}
-
-SMODS.Rank {
-	key = "BQueen",
-	card_key = "BQueen",
-	pos = {x=10},
-	lc_atlas = "bunocards",
-	hc_atlas = "hcbunocards",
-	loc_txt = {name = "Reverse"},
-	shorthand = "R",
-	nominal = 10,
-	next = {"SGTMD_BKing"},
-	in_pool = function (self, args)
-		return false
-	end
-}
-
-SMODS.Rank {
-	key = "BKing",
-	card_key = "BKing",
-	pos = {x=11},
-	lc_atlas = "bunocards",
-	hc_atlas = "hcbunocards",
-	loc_txt = {name = "+2"},
-	shorthand = "+2",
-	nominal = 10,
-	next = {"SGTMD_BJack"},
-	in_pool = function (self, args)
-		return false
-	end
-}
-
-
-
---- BUNO END!!!!!!!
+assert(SMODS.load_file("items/buno.lua"))()
 
 
 local flip_ref = Card.update
 function Card:update(dt)
+	
 	local ret = flip_ref(self,dt)
 
 	if self.ability.SGTMD_PermaFlip and (self.area == G.hand or self.area == G.jokers) then
@@ -991,13 +808,20 @@ SMODS.Back {
 			"{s:0.75}(chips before multiplication)",
 			"Small and Big Blinds cost {C:money}$5{}",
 			"Boss Blinds cost {C:money}$7{}",
-			"All Buy-ins return 2 to 1"
+			"All Buy-ins return 2 to 1",
+			"reaching {C:money}$0{} ends your run"
 		}
 	},
-
+	config = {dollars = 6},
 	atlas = "decks",
 	pos = { x = 1, y = 3},
 	calculate = function (self,card,context)
+		if G.GAME.dollars.array[1] <= 0 then
+			G.GAME.blind.config.blind = G.P_BLINDS.bl_SGTMD_deckblind
+			G.STATE = G.STATES.GAME_OVER; G.STATE_COMPLETE = false 
+		end
+		
+
 		if context.final_scoring_step then
 			if math.floor(hand_chips.array[1]/500) > 0 then
 			return {dollars = math.floor(hand_chips.array[1]/500) }
@@ -1019,6 +843,183 @@ SMODS.Back {
 		end
 		if context.end_of_round and not context.individual and not context.repetition then
 			return{dollars = G.GAME.SGTMD_GD_B * 2}
+		end
+	end
+}
+
+
+local cost_ref = Card.set_cost
+function Card:set_cost()
+	local ret = cost_ref(self)
+	if not G.GAME.selected_back then return ret end
+	if (self.ability.set == 'Joker' or (self.ability.set == 'Booster' and self.ability.name:find('Buffoon'))) and G.GAME.selected_back.effect.center.key == "b_SGTMD_Joker" then self.cost = 0 end
+	
+	return ret
+end
+
+SMODS.Back {
+	key = "Joker",
+	loc_txt = {
+		name = "Joker Deck",
+		text  = {
+			"All jokers and buffon packs are free",
+			"+2 joker slots",
+			"Non-jokers no longer show up in shop",
+			"{C:blue}-2{} hands every round"
+		}
+	},
+	config = {hands = -2, joker_slot = 2},
+	atlas = "decks",
+	pos = { x = 4, y = 2},
+	apply = function (self)
+		local banned = {
+			'p_celestial_normal_1','p_celestial_normal_2',"p_celestial_normal_3","p_celestial_normal_4","p_celestial_jumbo_1","p_celestial_jumbo_2","p_celestial_mega_1","p_celestial_mega_2"
+		,'p_standard_normal_1','p_standard_normal_2',"p_standard_normal_3","p_standard_normal_4","p_standard_jumbo_1","p_standard_jumbo_2","p_standard_mega_1","p_standard_mega_2"
+		,'p_arcana_normal_1','p_arcana_normal_2',"p_arcana_normal_3","p_arcana_normal_4","p_arcana_jumbo_1","p_arcana_jumbo_2","p_arcana_mega_1","p_arcana_mega_2"
+		,'p_spectral_normal_1','p_spectral_normal_2',"p_spectral_jumbo_1","p_spectral_mega_1",
+		"v_tarot_merchant","v_tarot_tycoon","v_planet_merchant","v_planet_tycoon","v_telescope","v_observatory","v_crystal_ball","v_omen_globe"}
+		for k,v in ipairs(banned) do
+			G.GAME.banned_keys[v] = true
+		end
+
+		G.E_MANAGER:add_event(Event({func = function()
+            G.GAME.tarot_rate = 0
+			G.GAME.planet_rate = 0
+			return true end }))
+	end
+
+}
+
+
+
+local gfts = G.FUNCS.toggle_shop
+		G.FUNCS.toggle_shop = function(e)
+			gfts(e)
+			if G.GAME.RETRO then
+				G.E_MANAGER:add_event(Event({
+					trigger = "after",
+					delay = 0.5,
+					func = function()
+						G.GAME.RETRO = false
+						
+						return true
+					end,
+				}))
+				G.E_MANAGER:add_event(Event({
+					trigger = "after",
+					delay = 0.5,
+					func = function()
+						G.GAME.current_round.used_packs = {}
+						G.STATE = G.STATES.SELECTING_HAND
+						return true
+					end,
+				}))
+			end
+		end
+		local gus = Game.update_shop
+		function Game:update_shop(dt)
+			gus(self, dt)
+			if not G.GAME.RETRO_COMPLETE then G.GAME.RETRO_COMPLETE = 0 end
+			if G.GAME.RETRO and G.STATE_COMPLETE and G.GAME.RETRO_COMPLETE < 60 then
+				G.shop.alignment.offset.y = -5.3
+				G.GAME.RETRO_COMPLETE = G.GAME.RETRO_COMPLETE + 1
+			end
+		end
+		local guis = G.UIDEF.shop
+		function G.UIDEF.shop()
+			local ret = guis()
+			if G.GAME.RETRO then
+				G.SHOP_SIGN:remove()
+				G.SHOP_SIGN = {
+					remove = function()
+						return true
+					end,
+					alignment = { offset = { y = 0 } },
+				}
+			end
+			return ret
+		end
+
+
+SMODS.Back {
+	key = "Throwback",
+	loc_txt = {
+		name = "Retro Deck",
+		text = {
+			"Skipping blinds creates 2 random tags",
+			"Skipping enters the shop",
+			"{C:white,X:mult}X1.5{} Base blind size"
+		}
+	},
+	dependencies = {
+		"thismoddoesntexistandifitdoeswhybalatrohaahhahahadhudhaidhgaswioudgawodwqada3.14159265349"
+	},    
+	config = {ante_scaling = 1.5},
+	atlas = "decks",
+	pos = { x = 5, y = 2},
+	calculate = function (self,card,context)
+		
+		if context.skip_blind then
+			for x=1 ,2 do
+			local tag = get_next_tag_key("retro")
+			tag = Tag(tag)
+			if tag.name == "Orbital Tag" then
+				local _poker_hands = {}
+				for k, v in pairs(G.GAME.hands) do
+					if v.visible then
+						_poker_hands[#_poker_hands + 1] = k
+					end
+				end
+				tag.ability.orbital_hand = pseudorandom_element(_poker_hands, pseudoseed("retro"))
+			end
+			add_tag(tag)
+			end
+			G.E_MANAGER:add_event(Event({
+				trigger = "after",
+				delay = 0.5,
+				func = function()
+					G.blind_select:remove()
+					G.blind_prompt_box:remove()
+					G.blind_select = nil
+					G.GAME.current_round.jokers_purchased = 0
+					G.GAME.RETRO = true
+					G.STATE = G.STATES.SHOP
+					G.STATE_COMPLETE = false
+					G.GAME.current_round.used_packs = {}
+					return true
+				end,
+			}))
+		end
+		
+	end
+}
+
+
+assert(SMODS.load_file("items/paint.lua"))()
+
+SMODS.Back {
+	key = "artist",
+	loc_txt = {
+		name = "Artist deck",
+		text = {
+			"When each blind is selected",
+			"create a random {C:blue}Paint{} card",
+			"{C:inactive}(must have room){}"
+		}
+
+	},
+	atlas = "decks",
+	pos = { x = 4, y = 3},
+	calculate =function (self, back, context)
+		if context.setting_blind and #G.consumeables.cards < G.consumeables.config.card_limit then
+			G.E_MANAGER:add_event(Event({
+				func = function ()
+					
+				
+				SMODS.add_card({set = "paint",area = G.consumeables})
+				return true
+			end}))
+			
 		end
 	end
 }
