@@ -36,7 +36,7 @@ TMD = {}
 TMD.splashpos = {{x=5,y=0},{x=1,y=0},{x=2,y=0},{x=3,y=0},{x=4,y=0},
 							  {x=0,y=1},{x=1,y=1},{x=2,y=1},{x=3,y=1},{x=4,y=1},
 							  {x=0,y=2},{x=4,y=2},{x=4,y=3},
-							  {x=0,y=3},{x=1,y=3},{x=3,y=3}}
+							  {x=0,y=3},{x=1,y=3},{x=3,y=3},{x=5,y=3},{x=6,y=3}}
 
 
 
@@ -559,8 +559,8 @@ SMODS.Back {
 	key = "shit",
 	loc_txt = {
 		name = "Shitposter deck",
-		text = {"Start with an {T:sticker_eternal,T:j_egg,C:attention}Eternal Egg",
-					"Deck contains only 6, 9, 4, and 2's"},
+		text = {"Start with an {T:st_eternal,T:j_egg,C:attention}Eternal Egg",
+					"Deck contains only 6, 9, 4, 2's and King of {C:hearts}Hearts{}"},
 		unlock = {"Score exactly {C:attention}69{} chips",
 	"on {C:green}April 20th{}"}
 	},
@@ -1000,7 +1000,7 @@ assert(SMODS.load_file("items/paint.lua"))()
 SMODS.Back {
 	key = "artist",
 	loc_txt = {
-		name = "Artist deck",
+		name = "Artist Deck",
 		text = {
 			"When each blind is selected",
 			"create a random {C:blue}Paint{} card",
@@ -1021,5 +1021,114 @@ SMODS.Back {
 			end}))
 			
 		end
+	end
+}
+
+SMODS.Back {
+	key = "ballot",
+	loc_txt = {
+		name = "Ballot Deck",
+		text = {
+			"Every {C:attention}3{} rounds:","go back {C:attention}1 ante","{C:attention}-1{} hand size"
+		}
+	},
+	config = {extra = {round = 0}},
+	loc_vars = function (self, info_queue, card)
+		
+		return{ vars = { 3 - (self.config.extra.round or 0) }}
+		
+	end,
+	atlas = "decks",
+	pos = {x=6,y=0},
+	calculate = function (self, back, context)
+		if context.setting_blind then
+			back.effect.config.extra.round = back.effect.config.extra.round + 1
+			if back.effect.config.extra.round >= 3 then
+				back.effect.config.extra.round = 0
+				ease_ante(-1)
+				G.hand:change_size(-1)
+				return {
+					message = "Again!"
+				}
+			end
+		end
+	end
+}
+
+SMODS.Back {
+	key = "piquet",
+	loc_txt = {
+		name = "Piquet Deck",
+		text = {
+			"Start run with 32 cards","From Ace to 7","{C:blue}-1 hand{} every round"
+		}
+	},
+	config = {hands = -1},
+	
+	atlas = "decks",
+	pos = {x=5,y=3},
+	apply = function(self)
+		G.E_MANAGER:add_event(Event({
+            func = function()
+            	local i2 = 1
+                for i = 1, #G.playing_cards do
+					local card = G.playing_cards[i2]
+
+                    if not (card.base.value == "Ace" or card.base.value == "King"  or card.base.value == "Queen"  or card.base.value =="Jack"  or card.base.value =="10"  or card.base.value =="9"  or card.base.value =="8"  or card.base.value == "7") then
+						G.deck:remove_card(card)
+						card:remove()
+						i2 = i2-1
+					end
+					i2 = i2 + 1
+                end
+
+                return true
+            end
+        }))
+	end
+}
+
+SMODS.Back {
+	key = "pinochle",
+	loc_txt = {
+		name = "Pinochle Deck",
+		text = {
+			"Start run with 48 cards","From Ace to 9","{C:blue}-1 hand{} every round"
+		}
+	},
+	config = {hands = -1},
+	
+	atlas = "decks",
+	pos = {x=6,y=3},
+	apply = function(self)
+		G.E_MANAGER:add_event(Event({
+            func = function()
+            	local i2 = 1
+                for i = 1, #G.playing_cards do
+					local card = G.playing_cards[i2]
+
+                    if not (card.base.value == "Ace" or card.base.value == "King"  or card.base.value == "Queen"  or card.base.value =="Jack"  or card.base.value =="10"  or card.base.value =="9" ) then
+						G.deck:remove_card(card)
+						card:remove()
+						i2 = i2-1
+					end
+					i2 = i2 + 1
+                end
+
+				local newcards = {}
+                for i = 1, #G.playing_cards do
+  					local card = G.playing_cards[i]
+
+                    local _card = copy_card(card, nil, nil, G.playing_card)
+                    _card:add_to_deck()
+                    G.deck.config.card_limit = G.deck.config.card_limit + 1
+                    table.insert(G.playing_cards, _card)
+                    G.deck:emplace(_card)
+                    
+                end
+
+                return true
+            end
+        }))
 	end
 }

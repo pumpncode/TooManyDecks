@@ -94,8 +94,16 @@ SMODS.Edition {
         }
     },
     calculate = function (self, card, context)
-        if (context.main_scoring and context.cardarea == G.play) or (context.pre_joker and context.cardarea ~= G.play) then
+        if (context.main_scoring and context.cardarea == G.play)  then
             G.GAME.current_round.discards_left = 1 + G.GAME.current_round.discards_left
+            return {
+                chips = -8
+            }
+        end
+        if (context.setting_blind and context.cardarea ~= G.play) then
+            G.GAME.current_round.discards_left = 1 + G.GAME.current_round.discards_left
+        end
+        if (context.pre_joker and context.cardarea ~= G.play) then
             return {
                 chips = -8
             }
@@ -114,8 +122,16 @@ SMODS.Edition {
         }
     },
     calculate = function (self, card, context)
-        if (context.main_scoring and context.cardarea == G.play) or (context.pre_joker and context.cardarea ~= G.play) then
+        if (context.main_scoring and context.cardarea == G.play)  then
             G.GAME.current_round.hands_left = 1 + G.GAME.current_round.hands_left
+            return {
+                chips = -8
+            }
+        end
+        if (context.setting_blind and context.cardarea ~= G.play) then
+            G.GAME.current_round.hands_left = 1 + G.GAME.current_round.hands_left
+        end
+        if (context.pre_joker and context.cardarea ~= G.play) then
             return {
                 chips = -8
             }
@@ -150,12 +166,12 @@ SMODS.Edition {
         name = "Painted",
         label = "Painted",
         text = {
-            "{C:mult}+1 Mult{} per empty Joker slot","Currently {C:mult}#1#{}"
+            "+{C:white,X:mult}x0.1{} for each joker slot"," +{C:white,X:mult}x0.4{} for each empty joker slot","{C:inactive}currently {C:white,X:mult}x#1#{C:inactive} mult{}"
         }
     },
     loc_vars = function (self, info_queue, card)
         if G.jokers then
-        return {vars = {G.jokers.config.card_limit - G.jokers.config.card_count}}
+        return {vars = {((G.jokers.config.card_limit - G.jokers.config.card_count)*0.4) + (G.jokers.config.card_limit*0.1) + 1}}
         else
             return {vars = {1}}
         end
@@ -164,7 +180,7 @@ SMODS.Edition {
         if (context.main_scoring and context.cardarea == G.play) or (context.pre_joker and context.cardarea ~= G.play) then
             
             return {
-                mult = G.jokers.config.card_limit - G.jokers.config.card_count
+                xmult = ((G.jokers.config.card_limit - G.jokers.config.card_count)*0.4) + (G.jokers.config.card_limit*0.1) + 1
             }
         end
     end
@@ -219,28 +235,6 @@ SMODS.Edition {
 }
 ]]
 
-SMODS.Consumable {
-    key = "sludge",
-    set = "paint",
-    config = {extra = {cards = 1}},
-    loc_vars = function (self, info_queue, card)
-        return{ vars = { card.ability.extra.cards }}
-    end,
-    loc_txt = {
-        name = "Sludge",
-        text = {
-            "you went too far..." 
-        }
-    },
-    atlas = "paints",
-    pos = {x=3,y=1},
-    can_use = function (self, card)
-        return false
-    end,
-    in_pool =function (self, args)
-        return false
-    end
-}
 
 
 SMODS.Consumable {
@@ -282,6 +276,141 @@ SMODS.Consumable {
                 SMODS.add_card {key = "c_SGTMD_sludge"}
             else
                 G.consumeables.highlighted[1]:set_edition("e_SGTMD_red")
+            end
+        end
+    end
+}
+
+SMODS.Consumable {
+    key = "orange",
+    set = "paint",
+    config = {extra = {cards = 1}},
+    loc_vars = function (self, info_queue, card)
+        info_queue[#info_queue+1] = G.P_CENTERS.e_SGTMD_orange
+        return{ vars = { card.ability.extra.cards }}
+    end,
+    loc_txt = {
+        name = "Orange Paint",
+        text = {
+            "Paints {C:attention}#1#{} selected","card {C:orange}orange{}" 
+        }
+    },
+    atlas = "paints",
+    pos = {x=1,y=1},
+    can_use = function (self, card)
+        return #G.jokers.highlighted
+				+ #G.hand.highlighted
+				+ #G.consumeables.highlighted
+				+ (G.pack_cards and #G.pack_cards.highlighted or 0)
+			== 2
+    end,
+    use = function (self, card, area, copier)
+        if G.jokers.highlighted[1] then
+            G.jokers.highlighted[1]:set_edition("e_SGTMD_orange")
+        elseif G.hand.highlighted[1] then
+            G.hand.highlighted[1]:set_edition("e_SGTMD_orange")
+        else
+            if G.consumeables.highlighted[1].ability.name == "c_SGTMD_blue" then
+                G.consumeables.highlighted[1]:start_dissolve()
+                SMODS.add_card {key = "c_SGTMD_white"}
+            elseif G.consumeables.highlighted[1].ability.name == "c_SGTMD_white" then
+                G.consumeables.highlighted[1]:start_dissolve()
+                SMODS.add_card {key = "c_SGTMD_yellow"}
+            elseif G.consumeables.highlighted[1].ability.set == "paint" and not G.consumeables.highlighted[1].ability.name == "c_SGTMD_sludge" then
+                G.consumeables.highlighted[1]:start_dissolve()
+                SMODS.add_card {key = "c_SGTMD_sludge"}
+            else
+                G.consumeables.highlighted[1]:set_edition("e_SGTMD_orange")
+            end
+        end
+    end
+}
+
+SMODS.Consumable {
+    key = "yellow",
+    set = "paint",
+    config = {extra = {cards = 1}},
+    loc_vars = function (self, info_queue, card)
+        info_queue[#info_queue+1] = G.P_CENTERS.e_SGTMD_yellow
+        return{ vars = { card.ability.extra.cards }}
+    end,
+    loc_txt = {
+        name = "Yellow Paint",
+        text = {
+            "Paints {C:attention}#1#{} selected","card {C:yellow}yellow{}" 
+        }
+    },
+    atlas = "paints",
+    pos = {x=2,y=1},
+    can_use = function (self, card)
+        return #G.jokers.highlighted
+				+ #G.hand.highlighted
+				+ #G.consumeables.highlighted
+				+ (G.pack_cards and #G.pack_cards.highlighted or 0)
+			== 2
+    end,
+    use = function (self, card, area, copier)
+        if G.jokers.highlighted[1] then
+            G.jokers.highlighted[1]:set_edition("e_SGTMD_yellow")
+        elseif G.hand.highlighted[1] then
+            G.hand.highlighted[1]:set_edition("e_SGTMD_yellow")
+        else
+            if G.consumeables.highlighted[1].ability.name == "c_SGTMD_blue" then
+                G.consumeables.highlighted[1]:start_dissolve()
+                SMODS.add_card {key = "c_SGTMD_green"}
+            elseif G.consumeables.highlighted[1].ability.name == "c_SGTMD_red" then
+                G.consumeables.highlighted[1]:start_dissolve()
+                SMODS.add_card {key = "c_SGTMD_orange"}
+            elseif G.consumeables.highlighted[1].ability.set  == "paint" and not G.consumeables.highlighted[1].ability.name == "c_SGTMD_sludge" then
+                G.consumeables.highlighted[1]:start_dissolve()
+                SMODS.add_card {key = "c_SGTMD_sludge"}
+            else
+                G.consumeables.highlighted[1]:set_edition("e_SGTMD_yellow")
+            end
+        end
+    end
+}
+
+SMODS.Consumable {
+    key = "green",
+    set = "paint",
+    config = {extra = {cards = 1}},
+    loc_vars = function (self, info_queue, card)
+        info_queue[#info_queue+1] = G.P_CENTERS.e_SGTMD_green
+        return{ vars = { card.ability.extra.cards }}
+    end,
+    loc_txt = {
+        name = "Green Paint",
+        text = {
+            "Paints {C:attention}#1#{} selected","card {C:green}green{}" 
+        }
+    },
+    atlas = "paints",
+    pos = {x=2,y=0},
+    can_use = function (self, card)
+        return #G.jokers.highlighted
+				+ #G.hand.highlighted
+				+ #G.consumeables.highlighted
+				+ (G.pack_cards and #G.pack_cards.highlighted or 0)
+			== 2
+    end,
+    use = function (self, card, area, copier)
+        if G.jokers.highlighted[1] then
+            G.jokers.highlighted[1]:set_edition("e_SGTMD_green")
+        elseif G.hand.highlighted[1] then
+            G.hand.highlighted[1]:set_edition("e_SGTMD_green")
+        else
+            if G.consumeables.highlighted[1].ability.name == "c_SGTMD_blue" then
+                G.consumeables.highlighted[1]:start_dissolve()
+                SMODS.add_card {key = "c_SGTMD_teal"}
+            elseif G.consumeables.highlighted[1].ability.name == "c_SGTMD_red" then
+                G.consumeables.highlighted[1]:start_dissolve()
+                SMODS.add_card {key = "c_SGTMD_white"}
+            elseif G.consumeables.highlighted[1].ability.set  == "paint" and not G.consumeables.highlighted[1].ability.name == "c_SGTMD_sludge" then
+                G.consumeables.highlighted[1]:start_dissolve()
+                SMODS.add_card {key = "c_SGTMD_sludge"}
+            else
+                G.consumeables.highlighted[1]:set_edition("e_SGTMD_green")
             end
         end
     end
@@ -336,96 +465,6 @@ SMODS.Consumable {
 }
 
 SMODS.Consumable {
-    key = "green",
-    set = "paint",
-    config = {extra = {cards = 1}},
-    loc_vars = function (self, info_queue, card)
-        info_queue[#info_queue+1] = G.P_CENTERS.e_SGTMD_green
-        return{ vars = { card.ability.extra.cards }}
-    end,
-    loc_txt = {
-        name = "Green Paint",
-        text = {
-            "Paints {C:attention}#1#{} selected","card {C:green}green{}" 
-        }
-    },
-    atlas = "paints",
-    pos = {x=2,y=0},
-    can_use = function (self, card)
-        return #G.jokers.highlighted
-				+ #G.hand.highlighted
-				+ #G.consumeables.highlighted
-				+ (G.pack_cards and #G.pack_cards.highlighted or 0)
-			== 2
-    end,
-    use = function (self, card, area, copier)
-        if G.jokers.highlighted[1] then
-            G.jokers.highlighted[1]:set_edition("e_SGTMD_green")
-        elseif G.hand.highlighted[1] then
-            G.hand.highlighted[1]:set_edition("e_SGTMD_green")
-        else
-            if G.consumeables.highlighted[1].ability.name == "c_SGTMD_blue" then
-                G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_teal"}
-            elseif G.consumeables.highlighted[1].ability.name == "c_SGTMD_red" then
-                G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_white"}
-            elseif G.consumeables.highlighted[1].ability.set  == "paint" and not G.consumeables.highlighted[1].ability.name == "c_SGTMD_sludge" then
-                G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_sludge"}
-            else
-                G.consumeables.highlighted[1]:set_edition("e_SGTMD_green")
-            end
-        end
-    end
-}
-
-SMODS.Consumable {
-    key = "yellow",
-    set = "paint",
-    config = {extra = {cards = 1}},
-    loc_vars = function (self, info_queue, card)
-        info_queue[#info_queue+1] = G.P_CENTERS.e_SGTMD_yellow
-        return{ vars = { card.ability.extra.cards }}
-    end,
-    loc_txt = {
-        name = "Yellow Paint",
-        text = {
-            "Paints {C:attention}#1#{} selected","card {C:yellow}yellow{}" 
-        }
-    },
-    atlas = "paints",
-    pos = {x=2,y=1},
-    can_use = function (self, card)
-        return #G.jokers.highlighted
-				+ #G.hand.highlighted
-				+ #G.consumeables.highlighted
-				+ (G.pack_cards and #G.pack_cards.highlighted or 0)
-			== 2
-    end,
-    use = function (self, card, area, copier)
-        if G.jokers.highlighted[1] then
-            G.jokers.highlighted[1]:set_edition("e_SGTMD_yellow")
-        elseif G.hand.highlighted[1] then
-            G.hand.highlighted[1]:set_edition("e_SGTMD_yellow")
-        else
-            if G.consumeables.highlighted[1].ability.name == "c_SGTMD_blue" then
-                G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_green"}
-            elseif G.consumeables.highlighted[1].ability.name == "c_SGTMD_red" then
-                G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_orange"}
-            elseif G.consumeables.highlighted[1].ability.set  == "paint" and not G.consumeables.highlighted[1].ability.name == "c_SGTMD_sludge" then
-                G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_sludge"}
-            else
-                G.consumeables.highlighted[1]:set_edition("e_SGTMD_yellow")
-            end
-        end
-    end
-}
-
-SMODS.Consumable {
     key = "teal",
     set = "paint",
     config = {extra = {cards = 1}},
@@ -436,22 +475,23 @@ SMODS.Consumable {
     loc_txt = {
         name = "Teal Paint",
         text = {
-            "Paints {C:attention}#1#{} selected","card {C:Chips}teal{}" ,
-            "cannot be used on {C:attention}Jokers"
+            "Paints {C:attention}#1#{} selected","card {C:Chips}teal{}" 
+            
         }
     },
     atlas = "paints",
     pos = {x=0,y=1},
     can_use = function (self, card)
-        return 
-				    #G.hand.highlighted
+        return  #G.jokers.highlighted
+                + #G.hand.highlighted
 				+ #G.consumeables.highlighted
 				+ (G.pack_cards and #G.pack_cards.highlighted or 0)
 			== 2
     end,
     use = function (self, card, area, copier)
-        
-        if G.hand.highlighted[1] then
+        if G.jokers.highlighted[1] then
+            G.jokers.highlighted[1]:set_edition("e_SGTMD_teal")
+        elseif G.hand.highlighted[1] then
             G.hand.highlighted[1]:set_edition("e_SGTMD_teal")
         else
             if G.consumeables.highlighted[1].ability.name == "c_SGTMD_yellow" then
@@ -467,50 +507,7 @@ SMODS.Consumable {
     end
 }
 
-SMODS.Consumable {
-    key = "orange",
-    set = "paint",
-    config = {extra = {cards = 1}},
-    loc_vars = function (self, info_queue, card)
-        info_queue[#info_queue+1] = G.P_CENTERS.e_SGTMD_orange
-        return{ vars = { card.ability.extra.cards }}
-    end,
-    loc_txt = {
-        name = "Orange Paint",
-        text = {
-            "Paints {C:attention}#1#{} selected","card {C:orange}orange{}" 
-        }
-    },
-    atlas = "paints",
-    pos = {x=1,y=1},
-    can_use = function (self, card)
-        return #G.jokers.highlighted
-				+ #G.hand.highlighted
-				+ #G.consumeables.highlighted
-				+ (G.pack_cards and #G.pack_cards.highlighted or 0)
-			== 2
-    end,
-    use = function (self, card, area, copier)
-        if G.jokers.highlighted[1] then
-            G.jokers.highlighted[1]:set_edition("e_SGTMD_orange")
-        elseif G.hand.highlighted[1] then
-            G.hand.highlighted[1]:set_edition("e_SGTMD_orange")
-        else
-            if G.consumeables.highlighted[1].ability.name == "c_SGTMD_blue" then
-                G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_white"}
-            elseif G.consumeables.highlighted[1].ability.name == "c_SGTMD_white" then
-                G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_yellow"}
-            elseif G.consumeables.highlighted[1].ability.set == "paint" and not G.consumeables.highlighted[1].ability.name == "c_SGTMD_sludge" then
-                G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_sludge"}
-            else
-                G.consumeables.highlighted[1]:set_edition("e_SGTMD_orange")
-            end
-        end
-    end
-}
+
 
 SMODS.Consumable {
     key = "white",
@@ -521,7 +518,7 @@ SMODS.Consumable {
         return{ vars = { card.ability.extra.cards }}
     end,
     loc_txt = {
-        name = "white Paint",
+        name = "White Paint",
         text = {
             "Paints {C:attention}#1#{} selected","card white" 
         }
@@ -607,3 +604,27 @@ SMODS.Consumable {
     end
 }
 ]]
+
+
+SMODS.Consumable {
+    key = "sludge",
+    set = "paint",
+    config = {extra = {cards = 1}},
+    loc_vars = function (self, info_queue, card)
+        return{ vars = { card.ability.extra.cards }}
+    end,
+    loc_txt = {
+        name = "Sludge",
+        text = {
+            "you went too far..." 
+        }
+    },
+    atlas = "paints",
+    pos = {x=3,y=1},
+    can_use = function (self, card)
+        return false
+    end,
+    in_pool =function (self, args)
+        return false
+    end
+}
