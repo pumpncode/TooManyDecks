@@ -26,11 +26,11 @@ SMODS.Atlas {
 	frames = 21
 }
 
-
+to_number = to_number or function (x) return x end
 
 TMD = {}
 
-
+-- Credit to multiplayer mod for finding this code in cryptids code
 
 
 TMD.splashpos = {{x=5,y=0},{x=1,y=0},{x=2,y=0},{x=3,y=0},{x=4,y=0},
@@ -60,7 +60,7 @@ SMODS.Back {
 		unlock = {"Score naneinf or higher"}
 	},
 	check_for_unlock = function(self, args)
-		if args.type == "chip_score" and args.chips.array[1] >= 1.8*10^308 then
+		if args.type == "chip_score" and to_number(args.chips) >= 1.8*10^308 then
 			return true
 		end
 	end,
@@ -426,38 +426,7 @@ SMODS.Back {
 	end
 }
 
-SMODS.DrawStep {
-	key = "profront",
-	order = 5000,
-	func = function (card,layer)
-		
-		if card.config.center.soul_pos then
-			
-			
-			
-        	    local scale_mod = 0.07 + 0.02*math.sin(1.8*G.TIMERS.REAL) + 0.00*math.sin((G.TIMERS.REAL - math.floor(G.TIMERS.REAL))*math.pi*14)*(1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL)))^3
-        	    local rotate_mod = 0.05*math.sin(1.219*G.TIMERS.REAL) + 0.00*math.sin((G.TIMERS.REAL)*math.pi*5)*(1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL)))^2
 
-        	    if type(card.config.center.soul_pos.draw) == 'function' then
-        	        card.config.center.soul_pos.draw(card, scale_mod, rotate_mod)
-        	    else
-        	        card.children.floating_sprite:draw_shader('dissolve',0, nil, nil, card.children.center,scale_mod, rotate_mod,nil, 0.1 + 0.03*math.sin(1.8*G.TIMERS.REAL),nil, 0.6)
-        	        card.children.floating_sprite:draw_shader('dissolve', nil, nil, nil, card.children.center, scale_mod, rotate_mod)
-        	    end
-        	    if card.edition then 
-        	        for k, v in pairs(G.P_CENTER_POOLS.Edition) do
-        	            if v.apply_to_float then
-        	                if card.edition[v.key:sub(3)] then
-        	                    card.children.floating_sprite:draw_shader(v.shader, nil, nil, nil, card.children.center, scale_mod, rotate_mod)
-        	                end
-        	            end
-        	        end
-        	    end
-        	
-		end
-	end,
-	conditions = {facing = "back"}
-}
 
 SMODS.Back {
 	key = "prodeck",
@@ -704,6 +673,7 @@ SMODS.Back {
 	atlas = "decks",
 	pos = {x=3,y=3},
 	calculate = function (self, card, context)
+		
 		if context.setting_blind and #G.jokers.cards > 0 then
 			G.E_MANAGER:add_event(Event({
 				func = function()
@@ -816,15 +786,15 @@ SMODS.Back {
 	atlas = "decks",
 	pos = { x = 1, y = 3},
 	calculate = function (self,card,context)
-		if G.GAME.dollars.array[1] <= 0 then
+		if to_number(G.GAME.dollars)<= 0 then
 			G.GAME.blind.config.blind = G.P_BLINDS.bl_SGTMD_deckblind
 			G.STATE = G.STATES.GAME_OVER; G.STATE_COMPLETE = false 
 		end
 		
 
 		if context.final_scoring_step then
-			if math.floor(hand_chips.array[1]/500) > 0 then
-			return {dollars = math.floor(hand_chips.array[1]/500) }
+			if math.floor(to_number(hand_chips)/500) > 0 then
+			return {dollars = math.floor(to_number(hand_chips)/500) }
 			end
 		end
 		if context.setting_blind then
@@ -836,8 +806,8 @@ SMODS.Back {
 			else
 				G.GAME.SGTMD_GD_B = 5
 			end
-			if G.GAME.dollars.array[1] - G.GAME.SGTMD_GD_B < 0 then
-				G.GAME.SGTMD_GD_B = G.GAME.SGTMD_GD_B - (G.GAME.SGTMD_GD_B - G.GAME.dollars.array[1])
+			if to_number(G.GAME.dollars) - G.GAME.SGTMD_GD_B < 0 then
+				G.GAME.SGTMD_GD_B = G.GAME.SGTMD_GD_B - (G.GAME.SGTMD_GD_B - to_number(G.GAME.dollars))
 			end
 			return { dollars = 0-G.GAME.SGTMD_GD_B}
 		end
@@ -1132,3 +1102,5 @@ SMODS.Back {
         }))
 	end
 }
+
+assert(SMODS.load_file("items/iamgoingtohaveaheadache.lua"))()

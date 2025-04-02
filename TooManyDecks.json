@@ -9,6 +9,6 @@
 	"priority": 0,
 	"badge_colour": "42f587",
 	"badge_text_colour": "ffffff",
-	"version": "2.1.1",
-	"dependencies": ["Steamodded (>=1.0.0~BETA-0312b)","Talisman (>=2.0.9)"]
+	"version": "2.2.0",
+	"dependencies": ["Steamodded (>=1.0.0~BETA-0323b)"]
 }
