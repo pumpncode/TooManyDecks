@@ -117,46 +117,7 @@ SMODS.Back {
 
 }
 
-if CardSleeves then
-	CardSleeves.Sleeve {
-		key = "oops",
-		loc_txt = {
-		name = "Oops! All Sixes!",
-		text = {"All Cards start",
-				"as 6's",
-				"Total chip's multiplied by 6",
-				"Total mult rounded to lower 6",
-				"{X:mult,C:white}X1.6{} base Blind size"}
-		},
-		config = {only_one_rank = '6', ante_scaling = 1.6},
-		atlas = "decks sleeves",
-		pos = { x = 0, y = 0},
-		apply = function(self, sleeve)
-			CardSleeves.Sleeve.apply(sleeve)
-        	G.E_MANAGER:add_event(Event({
-            	func = function()
-                	for _, card in ipairs(G.playing_cards) do
-                  	  assert(SMODS.change_base(card, nil, self.config.only_one_rank))
-                	end
-                return true
-           	end
-        	}))
-    	end,
-    	calculate = function(self, card, context)
-    	
-    		if context.final_scoring_step then
-    			hand_chips = hand_chips*6
-    			mult = math.max(1, mult - (mult % 6))
-    			return{
-    				chips = 0,
-    				mult = 0,
-    				message = "Sixed!"
-    			}	
-    		end
 
-    	end
-	}
-end
 
 SMODS.Back {
 	key = "argyle",
@@ -194,35 +155,7 @@ SMODS.Back {
 }
 
 
-if CardSleeves then
-	CardSleeves.Sleeve {
-		key = "argylesleeve",
-		loc_txt = {
-			name = "Argyle Sleeve",
-			text = {"Start run with",
-						"{C:attention}26{} {C:clubs}Clubs{} and",
-					"{C:attention}26{} {C:diamonds}Diamonds{} in deck"}
-		},
-		atlas = "decks sleeves",
-		pos = { x = 3, y = 0},
-		apply = function(self)
-			G.E_MANAGER:add_event(Event({
-				func = function()
-					for _, card in ipairs(G.playing_cards) do
-						
-						if card:is_suit("Hearts") then
-							assert(SMODS.change_base(card, "Diamonds"))
-						end
-						if card:is_suit("Spades") then
-							assert(SMODS.change_base(card, "Clubs"))
-						end
-					end
-				return true
-			   end
-			}))
-		end
-	}
-end
+
 
 SMODS.Back {
 	key = "doubleup",
@@ -255,39 +188,7 @@ SMODS.Back {
         }))
     end
 }
-if CardSleeves then
-    CardSleeves.Sleeve {
-    key = "doubleupsleeve",
-    atlas = "decks sleeves",  -- you will need to create an atlas yourself
-    pos = { x = 1, y = 0 },
-    loc_txt = {
-        name = "Double Sleeve",
-        text = {"There are two of",
-				"every base card"}
-    },
-    apply = function(self)
 
-
-        G.E_MANAGER:add_event(Event({
-            func = function()
-            	local newcards = {}
-                for i = 1, #G.playing_cards do
-  					local card = G.playing_cards[i]
-
-                    local _card = copy_card(card, nil, nil, G.playing_card)
-                    _card:add_to_deck()
-                    G.deck.config.card_limit = G.deck.config.card_limit + 1
-                    table.insert(G.playing_cards, _card)
-                    G.deck:emplace(_card)
-                    
-                end
-                
-                return true
-            end
-        }))
-    end
-}
-end
 
 SMODS.Back {
 	key = "kingdom",
@@ -327,38 +228,7 @@ SMODS.Back {
         	}))
     end
 }
-if CardSleeves then
-	CardSleeves.Sleeve {
-		key = "kingdom",
-		loc_txt = {
-			name = "Kingdom Sleeve",
-			text = {"All non-face cards",
-					"are Jack's",
-				"{C:red}-2{} hand size",
-				"Earn no {C:attention}Interest{}"},
-				unlock = {"Play {C:attention}5 Gold Jacks{} in one hand"}
-		},
-		loc_vars = function (self)
-			self.config = {hand_size = -2, no_interest = true}
-		end,
-		config = {hand_size = -2, no_interest = true},
-		atlas = "decks sleeves",
-		pos = { x = 2, y = 0},
-		apply = function(self, sleeve)
-			CardSleeves.Sleeve.apply(sleeve)
-	        	G.E_MANAGER:add_event(Event({
-	            	func = function()
-	                	for _, card in ipairs(G.playing_cards) do
-	                		if not card:is_face(false) then
-	                  	  		assert(SMODS.change_base(card, nil, "Jack" ))
-	                  	  	end
-	                	end
-	                return true
-	           	end
-	        	}))
-	    end
-	}
-end
+
 
 local og = set_deck_loss
 function set_deck_loss()
@@ -1104,3 +974,4 @@ SMODS.Back {
 }
 
 assert(SMODS.load_file("items/iamgoingtohaveaheadache.lua"))()
+if CardSleeves then assert(SMODS.load_file("items/sleeves.lua"))() end
