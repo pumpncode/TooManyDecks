@@ -732,57 +732,8 @@ SMODS.Back {
 
 
 
-local gfts = G.FUNCS.toggle_shop
-		G.FUNCS.toggle_shop = function(e)
-			gfts(e)
-			if G.GAME.RETRO then
-				G.E_MANAGER:add_event(Event({
-					trigger = "after",
-					delay = 0.5,
-					func = function()
-						G.GAME.RETRO = false
-						
-						return true
-					end,
-				}))
-				G.E_MANAGER:add_event(Event({
-					trigger = "after",
-					delay = 0.5,
-					func = function()
-						G.GAME.current_round.used_packs = {}
-						G.STATE = G.STATES.SELECTING_HAND
-						return true
-					end,
-				}))
-			end
-		end
-		local gus = Game.update_shop
-		function Game:update_shop(dt)
-			gus(self, dt)
-			if not G.GAME.RETRO_COMPLETE then G.GAME.RETRO_COMPLETE = 0 end
-			if G.GAME.RETRO and G.STATE_COMPLETE and G.GAME.RETRO_COMPLETE < 60 then
-				G.shop.alignment.offset.y = -5.3
-				G.GAME.RETRO_COMPLETE = G.GAME.RETRO_COMPLETE + 1
-			end
-		end
-		local guis = G.UIDEF.shop
-		function G.UIDEF.shop()
-			local ret = guis()
-			if G.GAME.RETRO then
-				G.SHOP_SIGN:remove()
-				G.SHOP_SIGN = {
-					remove = function()
-						return true
-					end,
-					alignment = { offset = { y = 0 } },
-				}
-			end
-			return ret
-		end
-
-
 SMODS.Back {
-	key = "Throwback",
+	key = "throwback",
 	loc_txt = {
 		name = "Retro Deck",
 		text = {
@@ -790,10 +741,7 @@ SMODS.Back {
 			"Skipping enters the shop",
 			"{C:white,X:mult}X1.5{} Base blind size"
 		}
-	},
-	dependencies = {
-		"thismoddoesntexistandifitdoeswhybalatrohaahhahahadhudhaidhgaswioudgawodwqada3.14159265349"
-	},    
+	},  
 	config = {ante_scaling = 1.5},
 	atlas = "decks",
 	pos = { x = 5, y = 2},
@@ -801,18 +749,15 @@ SMODS.Back {
 		
 		if context.skip_blind then
 			for x=1 ,2 do
-			local tag = get_next_tag_key("retro")
-			tag = Tag(tag)
-			if tag.name == "Orbital Tag" then
-				local _poker_hands = {}
-				for k, v in pairs(G.GAME.hands) do
-					if v.visible then
-						_poker_hands[#_poker_hands + 1] = k
-					end
+				local _pool, _pool_key = get_current_pool('Tag', nil, nil, "retro")
+				local _tag = pseudorandom_element(_pool, pseudoseed(_pool_key))
+				local it = 1
+				while _tag == 'UNAVAILABLE' do
+					it = it + 1
+					_tag = pseudorandom_element(_pool, pseudoseed(_pool_key..'_resample'..it))
 				end
-				tag.ability.orbital_hand = pseudorandom_element(_poker_hands, pseudoseed("retro"))
-			end
-			add_tag(tag)
+				print(_tag)
+				add_tag(Tag(_tag))
 			end
 			G.E_MANAGER:add_event(Event({
 				trigger = "after",
@@ -820,12 +765,12 @@ SMODS.Back {
 				func = function()
 					G.blind_select:remove()
 					G.blind_prompt_box:remove()
-					G.blind_select = nil
+
 					G.GAME.current_round.jokers_purchased = 0
-					G.GAME.RETRO = true
 					G.STATE = G.STATES.SHOP
+					G.GAME.shop_free = nil
+					G.GAME.shop_d6ed = nil
 					G.STATE_COMPLETE = false
-					G.GAME.current_round.used_packs = {}
 					return true
 				end,
 			}))
