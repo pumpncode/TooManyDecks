@@ -2,13 +2,13 @@
 	"id": "SGTMD",
 	"name": "Too Many Decks",
 	"display_name": "TMD",
-	"author": ["Squidguset"],
+	"author": ["Squidguset","WaffleDevs"],
 	"description": "Adds 21 new decks!",
 	"prefix": "SGTMD",
 	"main_file": "main.lua",
 	"priority": 0,
 	"badge_colour": "42f587",
 	"badge_text_colour": "ffffff",
-	"version": "3.1.0",
+	"version": "3.1.1",
 	"dependencies": ["Steamodded (>=1.0.0~BETA-0323b)"]
 }

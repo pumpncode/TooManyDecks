@@ -70,16 +70,7 @@ SMODS.Gradient {
 
 SMODS.Back {
     key = "thereisnogod",
-    loc_txt = {
-        name = "Oddly Specific Deck",
-        
-        text = {
-            "Play to find out what this does",
-            "{C:sgtmd_rellow};)",
-            "{C:sgtmd_bell}#1#"
-           
-        }
-    },
+    
     loc_vars = function (self, info_queue, card)
         return {vars = {TMD.splashtext[math.random(#TMD.splashtext)]}}
     end,

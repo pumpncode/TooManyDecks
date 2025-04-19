@@ -1,5 +1,175 @@
 return {
     descriptions = {
+        Back = {
+            b_SGTMD_nane = {
+                name = "Nil",
+		        text = {"naneinf"},
+		        unlock = {"Score naneinf or higher"}
+            },
+            b_SGTMD_oops = {
+                name = "Oops! All Sixes!",
+                text = {"All Cards start",
+                        "as 6's",
+                        "Total chip's multiplied by 6",
+                        "Total mult rounded to lower 6",
+                        "{X:mult,C:white}X1.6{} base Blind size"}
+            },
+            b_SGTMD_argyle = {
+                name = "Argyle Deck",
+                text = {"Start run with",
+                            "{C:attention}26{} {C:clubs}Clubs{} and",
+                        "{C:attention}26{} {C:diamonds}Diamonds{} in deck"},
+                unlock = {"Win a run with","{C:attention}Black Deck{}","on any difficulty"}
+            },
+            b_SGTMD_doubleup = {
+                name = "Double Deck",
+                text = {"There are two of",
+                        "every base card"}
+            },
+            b_SGTMD_kingdom = {
+                name = "Kingdom Deck",
+                text = {"All non-face cards",
+                            "are Jack's",
+                        "{C:red}-2{} hand size",
+                        "Earn no {C:attention}Interest{}"},
+                        unlock = {"Play {C:attention}5 Gold Jacks{} in one hand"}
+            },
+            b_SGTMD_fuckyou = {
+                name = "Fuck you",
+                text = {"You start with 1",
+                "card in your deck",
+                "{X:mult,C:white}X0.5{} Mult",
+                "Start at {C:attention}ante 0{}","Start with a {T:j_popcorn}popcorn{}",
+                "{s:2.0}Fuck You{}"},
+                unlock = {"{C:green}#1# in 15{} chance this","deck unlock when","losing a run"}
+            },
+            b_SGTMD_prodeck = {
+                name = "Pro Deck",
+                text = {
+                    "{C:blue}+1{} hand {C:red}+1{} discard",
+                    "{C:attention}+2{} hand size",
+                    "Start with extra {C:money}$10{}",
+                    "{X:mult,C:white}X1.4{} base Blind size",
+                    "{C:red}-1{} consumeable slot",
+                    "Earn no {C:attention}Interest{}"
+                },
+            
+           
+                unlock = {"Win a run with","{C:attention}Fuck you{}","on any difficulty"}
+            },
+            b_SGTMD_storage = {
+                name = "Storage Deck",
+                text = {"Any playing cards destroyed in ",
+                            "a shop are duplicated twice",
+                        "Create a {T:e_negative,C:dark_edition}Negative{} {T:c_hanged_man,C:tarot}Hanged Man{}",
+                        "after boss blind defeated"},
+                        unlock = {"Create and destroy a card","in one hand"}
+        },
+            b_SGTMD_shit = {
+                name = "Shitposter deck",
+                text = {"Start with an {T:st_eternal,T:j_egg,C:attention}Eternal Egg",
+                            "Deck contains only 6, 9, 4, 2's and King of {C:hearts}Hearts{}"},
+                unlock = {"Score exactly {C:attention}69{} chips",
+            "on {C:green}April 20th{}"}
+            },
+            b_SGTMD_buno = {
+                name = "Buno Deck",
+                text = {"Literally just a deck",
+            "of Buno cards",
+        "{s:2.0,C:attention}VERY W.I.P.{}",
+            "use at your own risk"},
+            unlock = {"Play a High Card with","{C:attention}0{} cards held in hand"}
+            },
+            b_SGTMD_invisible = {
+                name = "Invisible Deck",
+                text = {"All cards are flipped",
+                            "Create a {T:e_negative,C:dark_edition}negative{} copy","of leftmost joker when blind selected"
+                        ,"Jokers are face up immediately","after boss blinds"}
+            },
+            b_SGTMD_betrayal = {
+                name = "Deck of Betrayal",
+                text = {"Start run with",
+                            "{C:attention}26{} {C:hearts}Hearts{} and",
+                        "{C:attention}26{} {C:diamonds}Diamonds{} in deck",
+                    "Kings are replaced with Jacks",
+                "{C:blue}-1{} hand every round"},
+                unlock = {"Win a run with","{C:attention}Black Deck{}","on any difficulty"}
+            },
+            b_SGTMD_blackboard = {
+                name = "Blackboard Deck",
+                text = {"Start run with",
+                            "{C:attention}26{} {C:spades}Spades{} and",
+                        "{C:attention}26{} {C:clubs}Clubs{} in deck",
+                        "2s are replaced with Aces",
+                "{C:red}-1{} discard every round"},
+                unlock = {"Win a run with","{C:attention}Black Deck{}","on any difficulty"}
+            },
+            ["b_SGTMD_letsgogambling!!!!!"] = {
+                name = "Gambler's Deck",
+                text = {
+                    "Gain {C:money}$1{} for every","{C:chips}500{} base chips scored",
+                    "{s:0.75}(chips before multiplication)",
+                    "Small and Big Blinds cost {C:money}$5{}",
+                    "Boss Blinds cost {C:money}$7{}",
+                    "All Buy-ins return 2 to 1",
+                    "reaching {C:money}$0{} ends your run"
+                }
+            },
+            b_SGTMD_Joker = {
+                name = "Joker Deck",
+                text  = {
+                    "All jokers and buffon packs are free",
+                    "+2 joker slots",
+                    "Non-jokers no longer show up in shop",
+                    "{C:blue}-2{} hands every round"
+                }
+            },
+            b_SGTMD_throwback = {
+                name = "Retro Deck",
+                text = {
+                    "Skipping blinds creates 2 random tags",
+                    "Skipping enters the shop",
+                    "{C:white,X:mult}X1.5{} Base blind size"
+                }
+            },
+            b_SGTMD_artist = {
+                name = "Artist Deck",
+                text = {
+                    "When each blind is selected",
+                    "create a random {C:blue}Paint{} card",
+                    "{C:inactive}(must have room){}"
+                }
+        
+            },
+            b_SGTMD_ballot = {
+                name = "Ballot Deck",
+                text = {
+                    "Every {C:attention}3{} rounds:","go back {C:attention}1 ante","{C:attention}-1{} hand size"
+                }
+            },
+            b_SGTMD_piquet = {
+                name = "Piquet Deck",
+                text = {
+                    "Start run with 32 cards","From Ace to 7","{C:blue}-1 hand{} every round"
+                }
+            },
+            b_SGTMD_pinochle = {
+                name = "Pinochle Deck",
+                text = {
+                    "Start run with 48 cards","From Ace to 9","{C:blue}-1 hand{} every round"
+                }
+            },
+            b_SGTMD_thereisnogod = {
+                name = "Oddly Specific Deck",
+                
+                text = {
+                    "Play to find out what this does",
+                    "{C:sgtmd_rellow};)",
+                    "{C:sgtmd_bell}#1#"
+                   
+                }
+            },
+        },
         Sleeve={
 
             sleeve_SGTMD_oops = {
@@ -125,7 +295,12 @@ return {
         Edition={},
         Enhanced={},
         Joker={},
-        Other={},
+        Other={
+            SGTMD_consumenegative = {
+                name = "Negative",
+                text = {"{C:dark_edition}+1{} Consumable slot"}
+            }
+        },
         Planet={},
         Spectral={},
         Stake={},

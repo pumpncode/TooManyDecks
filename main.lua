@@ -54,11 +54,6 @@ SMODS.Blind {
 
 SMODS.Back {
 	key = "nane",
-	loc_txt = {
-		name = "Nil",
-		text = {"naneinf"},
-		unlock = {"Score naneinf or higher"}
-	},
 	check_for_unlock = function(self, args)
 		if args.type == "chip_score" and to_number(args.chips) >= 1.8*10^308 then
 			return true
@@ -80,14 +75,7 @@ SMODS.Back {
 
 SMODS.Back {
 	key = "oops",
-	loc_txt = {
-		name = "Oops! All Sixes!",
-		text = {"All Cards start",
-				"as 6's",
-				"Total chip's multiplied by 6",
-				"Total mult rounded to lower 6",
-				"{X:mult,C:white}X1.6{} base Blind size"}
-	},
+	
 	config = {only_one_rank = '6', ante_scaling = 1.6},
 	atlas = "decks",
 	pos = { x = 0, y = 0},
@@ -121,13 +109,7 @@ SMODS.Back {
 
 SMODS.Back {
 	key = "argyle",
-	loc_txt = {
-		name = "Argyle Deck",
-		text = {"Start run with",
-					"{C:attention}26{} {C:clubs}Clubs{} and",
-				"{C:attention}26{} {C:diamonds}Diamonds{} in deck"},
-		unlock = {"Win a run with","{C:attention}Black Deck{}","on any difficulty"}
-	},
+	
 	atlas = "decks",
 	unlocked = false,
 	pos = { x = 1, y = 1},
@@ -159,11 +141,7 @@ SMODS.Back {
 
 SMODS.Back {
 	key = "doubleup",
-	loc_txt = {
-		name = "Double Deck",
-		text = {"There are two of",
-				"every base card"}
-	},
+	
 	atlas = "decks",
 	pos = { x = 2, y = 0},
 	apply = function(self)
@@ -192,14 +170,7 @@ SMODS.Back {
 
 SMODS.Back {
 	key = "kingdom",
-	loc_txt = {
-		name = "Kingdom Deck",
-		text = {"All non-face cards",
-					"are Jack's",
-				"{C:red}-2{} hand size",
-				"Earn no {C:attention}Interest{}"},
-				unlock = {"Play {C:attention}5 Gold Jacks{} in one hand"}
-	},
+	
 	config = {hand_size = -2, no_interest = true},
 	unlocked = false,
 		check_for_unlock = function(self, args)
@@ -242,15 +213,7 @@ SMODS.Back {
 	locked_loc_vars = function (self, info_queue, card)
 		return { vars = { (G.GAME.probabilities.normal or 1)}}
 	end,
-	loc_txt = {
-		name = "Fuck you",
-		text = {"You start with 1",
-		"card in your deck",
-		"{X:mult,C:white}X0.5{} Mult",
-		"Start at {C:attention}ante 0{}","Start with a {T:j_popcorn}popcorn{}",
-		"{s:2.0}Fuck You{}"},
-		unlock = {"{C:green}#1# in 15{} chance this","deck unlock when","losing a run"}
-	},
+	
 	unlocked = false,
 	check_for_unlock = function (self, args)
 		if args.type == "loss" and pseudorandom("fuckyou") < G.GAME.probabilities.normal / 15 then
@@ -300,18 +263,7 @@ SMODS.Back {
 
 SMODS.Back {
 	key = "prodeck",
-	loc_txt = {
-		name = "Pro Deck",
-		text = {
-			"{C:blue}+1{} hand {C:red}+1{} discard",
-			"{C:attention}+2{} hand size",
-			"Start with extra {C:money}$10{}",
-			"{X:mult,C:white}X1.4{} base Blind size",
-			"{C:red}-1{} consumeable slot",
-			"Earn no {C:attention}Interest{}"
-		},
-		unlock = {"Win a run with","{C:attention}Fuck you{}","on any difficulty"}
-	},
+	
 	check_for_unlock = function(self,args)
 		if args.type == "win_deck" and G.GAME.selected_back.effect.center.key == "b_SGTMD_fuckyou" then
 			return true
@@ -326,14 +278,7 @@ SMODS.Back {
 
 SMODS.Back {
 	key = "storage",
-	loc_txt = {
-		name = "Storage Deck",
-		text = {"Any playing cards destroyed in ",
-					"a shop are duplicated twice",
-				"Create a {T:e_negative,C:dark_edition}Negative{} {T:c_hanged_man,C:tarot}Hanged Man{}",
-				"after boss blind defeated"},
-				unlock = {"Create and destroy a card","in one hand"}
-	},
+	
 	--unlocked = false,
 	check_for_unlock = function (self, args)
 		if args.type == "modify_deck" and #G.playing_cards > 1 then
@@ -396,13 +341,7 @@ SMODS.Back {
 
 SMODS.Back {
 	key = "shit",
-	loc_txt = {
-		name = "Shitposter deck",
-		text = {"Start with an {T:st_eternal,T:j_egg,C:attention}Eternal Egg",
-					"Deck contains only 6, 9, 4, 2's and King of {C:hearts}Hearts{}"},
-		unlock = {"Score exactly {C:attention}69{} chips",
-	"on {C:green}April 20th{}"}
-	},
+	
 	check_for_unlock = function (self,args)
 		if os.date("*t").month == 4 and os.date("*t").day == 20 and args.type == "chip_score" and args.chips == 69 then
 			return true
@@ -443,15 +382,8 @@ SMODS.Back {
 }
 
 SMODS.Back {
-	key = "Buno",
-	loc_txt = {
-		name = "Buno Deck",
-		text = {"Literally just a deck",
-	"of Buno cards",
-"{s:2.0,C:attention}VERY W.I.P.{}",
-	"use at your own risk"},
-	unlock = {"Play a High Card with","{C:attention}0{} cards held in hand"}
-	},
+	key = "buno",
+	
 	atlas = "decks",
 	unlocked = false,
 	check_for_unlock = function (self, args)
@@ -509,7 +441,7 @@ function Card:update(dt)
 	
 	local ret = flip_ref(self,dt)
 
-	if self.ability.SGTMD_PermaFlip and (self.area == G.hand or self.area == G.jokers) then
+	if self.ability.SGTMD_PermaFlip and (self.area == G.hand or self.area == G.jokers) and self.flipping ~= "f2b" then
 		self.flipping = "f2b"
         self.facing='back'
         self.sprite_facing = 'back'
@@ -535,15 +467,25 @@ end
 
 SMODS.Back {
 	key = "invisible",
-	loc_txt = {
-		name = "Invisible Deck",
-		text = {"All cards are flipped",
-					"Create a {T:e_negative,C:dark_edition}negative{} copy","of leftmost joker when blind selected"}
-	},
+	
 	atlas = "decks",
 	pos = {x=3,y=3},
 	calculate = function (self, card, context)
-		
+		if context.end_of_round and G.GAME.blind.boss and not context.repetition and not context.individual  then
+			for x = 1,#G.jokers.cards do
+				local c = G.jokers.cards[x]
+				c.ability.SGTMD_PermaFlip = false
+				c:flip()
+			end
+		end
+		if context.starting_shop then
+			for x = 1,#G.jokers.cards do
+				local c = G.jokers.cards[x]
+				c:flip()
+				c.ability.SGTMD_PermaFlip = true
+				
+			end
+		end
 		if context.setting_blind and #G.jokers.cards > 0 then
 			G.E_MANAGER:add_event(Event({
 				func = function()
@@ -562,15 +504,7 @@ SMODS.Back {
 
 SMODS.Back {
 	key = "betrayal",
-	loc_txt = {
-		name = "Deck of Betrayal",
-		text = {"Start run with",
-					"{C:attention}26{} {C:hearts}Hearts{} and",
-				"{C:attention}26{} {C:diamonds}Diamonds{} in deck",
-			"Kings are replaced with Jacks",
-		"{C:blue}-1{} hand every round"},
-		unlock = {"Win a run with","{C:attention}Black Deck{}","on any difficulty"}
-	},
+	
 	config = {hands = -1},
 	atlas = "decks",
 	pos = { x = 4, y = 0},
@@ -601,15 +535,7 @@ SMODS.Back {
 
 SMODS.Back {
 	key = "blackboard",
-	loc_txt = {
-		name = "Blackboard Deck",
-		text = {"Start run with",
-					"{C:attention}26{} {C:spades}Spades{} and",
-				"{C:attention}26{} {C:clubs}Clubs{} in deck",
-				"2s are replaced with Aces",
-		"{C:red}-1{} discard every round"},
-		unlock = {"Win a run with","{C:attention}Black Deck{}","on any difficulty"}
-	},
+	
 	config = {discards = -1},
 	atlas = "decks",
 	pos = { x = 4, y = 1},
@@ -641,22 +567,12 @@ SMODS.Back {
 
 SMODS.Back {
 	key = "letsgogambling!!!!!",
-	loc_txt = {
-		name = "Gambler's Deck",
-		text = {
-			"Gain {C:money}$1{} for every","{C:chips}500{} base chips scored",
-			"{s:0.75}(chips before multiplication)",
-			"Small and Big Blinds cost {C:money}$5{}",
-			"Boss Blinds cost {C:money}$7{}",
-			"All Buy-ins return 2 to 1",
-			"reaching {C:money}$0{} ends your run"
-		}
-	},
+	
 	config = {dollars = 6},
 	atlas = "decks",
 	pos = { x = 1, y = 3},
 	calculate = function (self,card,context)
-		if to_number(G.GAME.dollars)<= 0 then
+		if to_number(G.GAME.dollars)<= 0 and G.STATE ~= G.STATES.GAME_OVER then
 			G.GAME.blind.config.blind = G.P_BLINDS.bl_SGTMD_deckblind
 			G.STATE = G.STATES.GAME_OVER; G.STATE_COMPLETE = false 
 		end
@@ -699,15 +615,7 @@ end
 
 SMODS.Back {
 	key = "Joker",
-	loc_txt = {
-		name = "Joker Deck",
-		text  = {
-			"All jokers and buffon packs are free",
-			"+2 joker slots",
-			"Non-jokers no longer show up in shop",
-			"{C:blue}-2{} hands every round"
-		}
-	},
+	
 	config = {hands = -2, joker_slot = 2},
 	atlas = "decks",
 	pos = { x = 4, y = 2},
@@ -734,14 +642,7 @@ SMODS.Back {
 
 SMODS.Back {
 	key = "throwback",
-	loc_txt = {
-		name = "Retro Deck",
-		text = {
-			"Skipping blinds creates 2 random tags",
-			"Skipping enters the shop",
-			"{C:white,X:mult}X1.5{} Base blind size"
-		}
-	},  
+	
 	config = {ante_scaling = 1.5},
 	atlas = "decks",
 	pos = { x = 5, y = 2},
@@ -756,7 +657,7 @@ SMODS.Back {
 					it = it + 1
 					_tag = pseudorandom_element(_pool, pseudoseed(_pool_key..'_resample'..it))
 				end
-				print(_tag)
+				
 				add_tag(Tag(_tag))
 			end
 			G.E_MANAGER:add_event(Event({
@@ -784,15 +685,7 @@ assert(SMODS.load_file("items/paint.lua"))()
 
 SMODS.Back {
 	key = "artist",
-	loc_txt = {
-		name = "Artist Deck",
-		text = {
-			"When each blind is selected",
-			"create a random {C:blue}Paint{} card",
-			"{C:inactive}(must have room){}"
-		}
-
-	},
+	
 	atlas = "decks",
 	pos = { x = 4, y = 3},
 	calculate =function (self, back, context)
@@ -811,12 +704,7 @@ SMODS.Back {
 
 SMODS.Back {
 	key = "ballot",
-	loc_txt = {
-		name = "Ballot Deck",
-		text = {
-			"Every {C:attention}3{} rounds:","go back {C:attention}1 ante","{C:attention}-1{} hand size"
-		}
-	},
+	
 	config = {extra = {round = 0}},
 	loc_vars = function (self, info_queue, card)
 		
@@ -842,12 +730,7 @@ SMODS.Back {
 
 SMODS.Back {
 	key = "piquet",
-	loc_txt = {
-		name = "Piquet Deck",
-		text = {
-			"Start run with 32 cards","From Ace to 7","{C:blue}-1 hand{} every round"
-		}
-	},
+	
 	config = {hands = -1},
 	
 	atlas = "decks",
@@ -875,12 +758,7 @@ SMODS.Back {
 
 SMODS.Back {
 	key = "pinochle",
-	loc_txt = {
-		name = "Pinochle Deck",
-		text = {
-			"Start run with 48 cards","From Ace to 9","{C:blue}-1 hand{} every round"
-		}
-	},
+	
 	config = {hands = -1},
 	
 	atlas = "decks",

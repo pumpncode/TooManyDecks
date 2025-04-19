@@ -10,7 +10,7 @@
 // Values of this variable:
 // self.ARGS.send_to_shader[1] = math.min(self.VT.r*3, 1) + (math.sin(G.TIMERS.REAL/28) + 1) + (self.juice and self.juice.r*20 or 0) + self.tilt_var.amt
 // self.ARGS.send_to_shader[2] = G.TIMERS.REAL
-extern PRECISION vec2 red;
+extern PRECISION vec2 paint;
 
 extern PRECISION number dissolve;
 extern PRECISION number time;
@@ -24,6 +24,9 @@ extern PRECISION vec2 image_details;
 extern bool shadow;
 extern PRECISION vec4 burn_colour_1;
 extern PRECISION vec4 burn_colour_2;
+
+extern PRECISION vec3 ext;
+
 
 // [Required] 
 // Apply dissolve effect (when card is being "burnt", e.g. when consumable is used)
@@ -88,21 +91,18 @@ vec4 effect( vec4 colour, Image texture, vec2 texture_coords, vec2 screen_coords
     number delta = high-low -0.1;
 
 	
-
-    number fac = 0.8 + 0.9*sin(11.*uv.x+4.32*uv.y + red.r*12. + cos(red.r*5.3 + uv.y*4.2 - uv.x*4.));
-    number fac2 = 0.5 + 0.5*sin(8.*uv.x+2.32*uv.y + red.r*5. - cos(red.r*2.3 + uv.x*8.2));
-    number fac3 = 0.5 + 0.5*sin(10.*uv.x+5.32*uv.y + red.r*6.111 + sin(red.r*5.3 + uv.y*3.2));
-    number fac4 = 0.5 + 0.5*sin(3.*uv.x+2.32*uv.y + red.r*8.111 + sin(red.r*1.3 + uv.y*11.2));
-    number fac5 = sin(0.9*16.*uv.x+5.32*uv.y + red.r*12. + cos(red.r*5.3 + uv.y*4.2 - uv.x*4.));
-
-    number maxfac = 0.7*max(max(fac, max(fac2, max(fac3,0.0))) + (fac+fac2+fac3*fac4), 0.);
-
-	tex.g = tex.g-delta + delta*maxfac*(0.7 - fac5*0.27) - 0.1;
-    // generic shimmer copied straight from negative_shine.fs
-
+    if (uv.x > uv.x * 2.){
+        uv = paint;
+    }
+    
+    
 	vec4 hslt = HSL(tex);
+    
+    //vec3 ext = vec3(0,1,1);
 
-	hslt.r = 0;
+    hslt.r = ext.r;
+    hslt.g = ext.g * hslt.g;
+    hslt.b = ext.b * hslt.b;
 
 	tex = RGB(hslt);
 

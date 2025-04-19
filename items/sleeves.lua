@@ -1,5 +1,5 @@
 init = function(self)
-    --Change name of cards with Jolly edition
+    --Change name of cards depending on deck+sleeve combo (thanks cryptid)
     local gcui = generate_card_ui
     function generate_card_ui(
         _c,

@@ -14,7 +14,21 @@ SMODS.Atlas {
 	path = "buno1.png"
 }
 
-
+SMODS.Rank {
+	key = "B10",
+	card_key = "B10",
+	pos = {x=8},
+	lc_atlas = "bunocards",
+	hc_atlas = "hcbunocards",
+	loc_txt = {name = "Zero"},
+	shorthand = "0",
+	nominal = 1,
+	face_nominal = 0,
+	next = {"SGTMD_BAce"},
+	in_pool = function (self, args)
+		return false
+	end
+}
 
 SMODS.Rank {
 	key = "BAce",
@@ -152,21 +166,7 @@ SMODS.Rank {
 	end
 }
 
-SMODS.Rank {
-	key = "B10",
-	card_key = "B10",
-	pos = {x=8},
-	lc_atlas = "bunocards",
-	hc_atlas = "hcbunocards",
-	loc_txt = {name = "Zero"},
-	shorthand = "0",
-	nominal = 1,
-	face_nominal = 0,
-	next = {"SGTMD_BAce"},
-	in_pool = function (self, args)
-		return false
-	end
-}
+
 
 SMODS.Rank {
 	key = "BJack",
@@ -177,6 +177,7 @@ SMODS.Rank {
 	loc_txt = {name = "Skip"},
 	shorthand = "S",
 	nominal = 10,
+	face_nominal = 0,
 	next = {"SGTMD_BQueen"},
 	in_pool = function (self, args)
 		return false
@@ -192,6 +193,7 @@ SMODS.Rank {
 	loc_txt = {name = "Reverse"},
 	shorthand = "R",
 	nominal = 10,
+	face_nominal = 0.5,
 	next = {"SGTMD_BKing"},
 	in_pool = function (self, args)
 		return false
@@ -207,6 +209,7 @@ SMODS.Rank {
 	loc_txt = {name = "+2"},
 	shorthand = "+2",
 	nominal = 10,
+	face_nominal = 1,
 	next = {"SGTMD_BJack"},
 	in_pool = function (self, args)
 		return false

@@ -15,18 +15,18 @@ SMODS.Atlas {
     path = "paint.png"
 }
 
-SMODS.Shader( {key = "red",path = "red.fs",})
-SMODS.Shader( {key = "blue",path = "blue.fs",})
-SMODS.Shader( {key = "green",path = "green.fs",})
-SMODS.Shader( {key = "yellow",path = "yellow.fs",})
-SMODS.Shader( {key = "teal",path = "teal.fs",})
-SMODS.Shader( {key = "orange",path = "orange.fs",})
-SMODS.Shader( {key = "white",path = "white.fs",})
-SMODS.Shader( {key = "black",path = "black.fs",})
+SMODS.Shader( {key = "paint",path = "paint.fs",
+send_vars = function (sprite, card)
+    return {
+        ext = card.edition.ext
+    }
+end,})
+
 
 SMODS.Edition {
+    no_collection = true,
     key = "red",
-    shader = "red",
+    shader = "paint",
     loc_txt = {
         name = "Painted",
         label = "Painted",
@@ -34,6 +34,7 @@ SMODS.Edition {
             "+5 Mult"
         }
     },
+    config = {ext = {0,1,1}},
     calculate = function (self, card, context)
         if (context.main_scoring and context.cardarea == G.play) or (context.pre_joker and context.cardarea ~= G.play) then
             return {
@@ -44,8 +45,9 @@ SMODS.Edition {
 }
 
 SMODS.Edition {
+    no_collection = true,
     key = "blue",
-    shader = "blue",
+    shader = "paint",
     loc_txt = {
         name = "Painted",
         label = "Painted",
@@ -53,6 +55,7 @@ SMODS.Edition {
             "+35 Chips"
         }
     },
+    config = {ext = {0.6222,1,1}},
     calculate = function (self, card, context)
         if (context.main_scoring and context.cardarea == G.play) or (context.pre_joker and context.cardarea ~= G.play) then
             return {
@@ -63,8 +66,9 @@ SMODS.Edition {
 }
 
 SMODS.Edition {
+    no_collection = true,
     key = "yellow",
-    shader = "yellow",
+    shader = "paint",
     loc_txt = {
         name = "Painted",
         label = "Painted",
@@ -72,6 +76,7 @@ SMODS.Edition {
             "+6 Mult and +15 Chips"
         }
     },
+    config = {ext = {0.1833333333,1,1}},
     calculate = function (self, card, context)
         if (context.main_scoring and context.cardarea == G.play) or (context.pre_joker and context.cardarea ~= G.play) then
             
@@ -84,8 +89,9 @@ SMODS.Edition {
 }
 
 SMODS.Edition {
+    no_collection = true,
     key = "green",
-    shader = "green",
+    shader = "paint",
     loc_txt = {
         name = "Painted",
         label = "Painted",
@@ -93,6 +99,7 @@ SMODS.Edition {
             "-8 Chips and +1 Discard"
         }
     },
+    config = {ext = {0.375,1,1}},
     calculate = function (self, card, context)
         if (context.main_scoring and context.cardarea == G.play)  then
             G.GAME.current_round.discards_left = 1 + G.GAME.current_round.discards_left
@@ -112,8 +119,9 @@ SMODS.Edition {
 }
 
 SMODS.Edition {
+    no_collection = true,
     key = "teal",
-    shader = "teal",
+    shader = "paint",
     loc_txt = {
         name = "Painted",
         label = "Painted",
@@ -121,6 +129,7 @@ SMODS.Edition {
             "-8 Chips and +1 hand"
         }
     },
+    config = {ext = {0.5,1,1}},
     calculate = function (self, card, context)
         if (context.main_scoring and context.cardarea == G.play)  then
             G.GAME.current_round.hands_left = 1 + G.GAME.current_round.hands_left
@@ -140,8 +149,9 @@ SMODS.Edition {
 }
 
 SMODS.Edition {
+    no_collection = true,
     key = "orange",
-    shader = "orange",
+    shader = "paint",
     loc_txt = {
         name = "Painted",
         label = "Painted",
@@ -149,6 +159,7 @@ SMODS.Edition {
             "x1.8 mult"
         }
     },
+    config = {ext = {0.05,1,1}},
     calculate = function (self, card, context)
         if (context.main_scoring and context.cardarea == G.play) or (context.pre_joker and context.cardarea ~= G.play) then
             
@@ -160,8 +171,9 @@ SMODS.Edition {
 }
 
 SMODS.Edition {
+    no_collection = true,
     key = "white",
-    shader = "white",
+    shader = "paint",
     loc_txt = {
         name = "Painted",
         label = "Painted",
@@ -169,6 +181,7 @@ SMODS.Edition {
             "+{C:white,X:mult}x0.1{} for each joker slot"," +{C:white,X:mult}x0.4{} for each empty joker slot","{C:inactive}currently {C:white,X:mult}x#1#{C:inactive} mult{}"
         }
     },
+    config = {ext = {1,0,1.4}},
     loc_vars = function (self, info_queue, card)
         if G.jokers then
         return {vars = {((G.jokers.config.card_limit - G.jokers.config.card_count)*0.4) + (G.jokers.config.card_limit*0.1) + 1}}
@@ -197,6 +210,7 @@ end
 
 
 SMODS.Edition {
+    no_collection = true,
     key = "black",
     shader = "black",
     loc_txt = {
