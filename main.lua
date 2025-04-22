@@ -697,13 +697,21 @@ SMODS.Back {
 
 SMODS.Back {
 	key = "throwback",
-	
+	loc_txt = {
+		name = "Retro Deck",
+		text = {
+			"Skipping blinds creates 2 random tags",
+			"Skipping enters the shop",
+			"{C:white,X:mult}X1.5{} Base blind size"
+		}
+	},  
 	config = {ante_scaling = 1.5},
 	atlas = "decks",
 	pos = { x = 5, y = 2},
 	calculate = function (self,card,context)
 		
 		if context.skip_blind then
+			
 			for x=1 ,2 do
 				local _pool, _pool_key = get_current_pool('Tag', nil, nil, "retro")
 				local _tag = pseudorandom_element(_pool, pseudoseed(_pool_key))
@@ -712,21 +720,47 @@ SMODS.Back {
 					it = it + 1
 					_tag = pseudorandom_element(_pool, pseudoseed(_pool_key..'_resample'..it))
 				end
-				
 				add_tag(Tag(_tag))
 			end
 			G.E_MANAGER:add_event(Event({
-				trigger = "after",
-				delay = 0.5,
+				trigger = 'before', delay = 0.2,
 				func = function()
-					G.blind_select:remove()
-					G.blind_prompt_box:remove()
+				  G.blind_prompt_box.alignment.offset.y = -10
+				  G.blind_select.alignment.offset.y = 40
+				  G.blind_select.alignment.offset.x = 0
+				  return true
+			end}))
+			G.E_MANAGER:add_event(Event({
+			trigger = 'immediate',
+			func = function()
+				G.blind_select:remove()
+				G.blind_prompt_box:remove()
+				G.blind_select = nil
+				return true
+			end}))
+			G.E_MANAGER:add_event(Event({
+				trigger = "after",
+				delay = .9,
+				func = function()
+					-- G.blind_select:remove()
+					-- G.blind_prompt_box:remove()
 
 					G.GAME.current_round.jokers_purchased = 0
 					G.STATE = G.STATES.SHOP
 					G.GAME.shop_free = nil
 					G.GAME.shop_d6ed = nil
 					G.STATE_COMPLETE = false
+					
+					G.E_MANAGER:add_event(Event({
+						trigger = "after",
+						delay = 1.4,
+						func = function()
+							for i = 1, #G.GAME.tags do
+								if G.GAME.tags[i]:apply_to_run({type = 'new_blind_choice'}) then break end
+							end
+							return true
+						end,
+					}))
 					return true
 				end,
 			}))
