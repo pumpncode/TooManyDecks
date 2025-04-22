@@ -61,7 +61,7 @@ return {
                 name = "Storage Deck",
                 text = {"Any playing cards destroyed in ",
                             "a shop are duplicated twice",
-                        "Create a {T:e_negative,C:dark_edition}Negative{} {T:c_hanged_man,C:tarot}Hanged Man{}",
+                        "Create 2 {T:e_negative,C:dark_edition}Negative{} {T:c_hanged_man,C:tarot}Hanged Man{}'s",
                         "after boss blind defeated"},
                         unlock = {"Create and destroy a card","in one hand"}
         },
@@ -169,6 +169,28 @@ return {
                    
                 }
             },
+            b_SGTMD_snake = {
+                name = "Snake Deck",
+                text = {
+                    "After Play or Discard","always draw 3 cards",
+                    "{C:blue}+1{} hand and {C:red}+1{} discard per round"
+                }
+            },
+            b_SGTMD_stone = {
+                name = "Stone Deck",
+                text = {
+                    "Start with {C:attention}1 Joker slot{}",
+                    "{C:attention}+1 Joker slot {}for every {C:attention}10","{C:blue,T:m_stone}stone cards{} in deck"
+                },
+                
+            },
+            b_SGTMD_wild = {
+                name = "Wild Deck",
+                text = {
+                    "Scored {C:attention,T:m_wild}Wild cards{} give random effects",
+                    "{C:blue}+10{} chips for every","{C:attention,T:m_wild}Wild card{} in full deck"
+                }
+            }
         },
         Sleeve={
 

@@ -36,7 +36,8 @@ TMD = {}
 TMD.splashpos = {{x=5,y=0},{x=1,y=0},{x=2,y=0},{x=3,y=0},{x=4,y=0},
 							  {x=0,y=1},{x=1,y=1},{x=2,y=1},{x=3,y=1},{x=4,y=1},
 							  {x=0,y=2},{x=4,y=2},{x=4,y=3},
-							  {x=0,y=3},{x=1,y=3},{x=3,y=3},{x=5,y=3},{x=6,y=3}}
+							  {x=0,y=3},{x=1,y=3},{x=3,y=3},{x=5,y=3},{x=6,y=3},
+							  {x=6,y=2},{x=6,y=1},{ x = 5, y = 2}}
 
 
 
@@ -259,7 +260,58 @@ SMODS.Back {
 	end
 }
 
+SMODS.DrawStep {
+    key = 'float_back',
+    order = 60,
+    func = function(self)
+        if self.children.back_float and (self.config.center.discovered or self.bypass_discovery_center) then
+            local scale_mod = 0.07 + 0.02*math.sin(1.8*G.TIMERS.REAL) + 0.00*math.sin((G.TIMERS.REAL - math.floor(G.TIMERS.REAL))*math.pi*14)*(1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL)))^3
+            local rotate_mod = 0.05*math.sin(1.219*G.TIMERS.REAL) + 0.00*math.sin((G.TIMERS.REAL)*math.pi*5)*(1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL)))^2
 
+
+			self.children.back_float:draw_shader('dissolve',0, nil, nil, self.children.center,scale_mod, rotate_mod,nil, 0.1 + 0.03*math.sin(1.8*G.TIMERS.REAL),nil, 0.6)
+			self.children.back_float:draw_shader('dissolve', nil, nil, nil, self.children.center, scale_mod, rotate_mod)
+
+            if self.edition then 
+                for k, v in pairs(G.P_CENTER_POOLS.Edition) do
+                    if v.apply_to_float then
+                        if self.edition[v.key:sub(3)] then
+                            self.children.back_float:draw_shader(v.shader, nil, nil, nil, self.children.center, scale_mod, rotate_mod)
+                        end
+                    end
+                end
+            end
+        end
+    end,
+    conditions = { vortex = false, facing = 'back' },
+}
+
+local cssref = Card.set_sprites
+
+function  Card:set_sprites(_center,_front)
+	local ret = cssref(self,_center,_front)
+	if _center then 
+        if _center.set then
+			
+	if  G.GAME.selected_back and G.GAME.selected_back.effect.center.float_pos or _center.float_pos  then
+		if _center.float_pos or _center.set ~= "Back" or (self.back == "viewed_back" and G.GAME.viewed_back.effect.center.float_pos) then
+		if self.children.back_float then self.children.back_float:remove() end
+		self.children.back_float = Sprite(self.T.x, self.T.y, self.T.w, self.T.h,  G.ASSET_ATLAS[(G.GAME.viewed_back or G.GAME.selected_back) and ((G.GAME.viewed_back or G.GAME.selected_back)[G.SETTINGS.colourblind_option and 'hc_atlas' or 'lc_atlas'] or (G.GAME.viewed_back or G.GAME.selected_back).atlas) or 'centers'],_center.float_pos or G.GAME.selected_back.effect.center.float_pos  )
+		
+		self.children.back_float:set_role({major = self, role_type = 'Glued', draw_major = self})
+		self.children.back_float.role.draw_major = self
+		if self.area == G.deck then
+			self.children.back_float.role.draw_major = nil
+		end
+		self.children.back_float.states.visible = false
+	    self.children.back_float.states.hover.can = false
+	    self.children.back_float.states.click.can = false
+	end
+	end
+	end
+	end
+	return ret
+end
 
 SMODS.Back {
 	key = "prodeck",
@@ -272,7 +324,8 @@ SMODS.Back {
 	unlocked = false,
 	config = {hands = 1, discards = 1,hand_size = 2, consumable_slot = -1,no_interest = true,ante_scaling = 1.4, dollars = 10},
 	atlas = "decks",
-	pos = { x = 0, y = 3}
+	pos = { x = 0, y = 3},
+	--float_pos = {x=3,y=2}
 }
 
 
@@ -343,7 +396,7 @@ SMODS.Back {
 	key = "shit",
 	
 	check_for_unlock = function (self,args)
-		if os.date("*t").month == 4 and os.date("*t").day == 20 and args.type == "chip_score" and args.chips == 69 then
+		if os.date("*t").month == 4 and os.date("*t").day == 20 and args.type == "chip_score" and to_number(args.chips) == 69 then
 			return true
 		end
 	end,
@@ -460,6 +513,8 @@ function CardArea:emplace(card, location, stay_flipped)
 		else
 			card.ability.SGTMD_PermaFlip = false
 		end
+
+		
 
 	return ret
 end
@@ -793,6 +848,88 @@ SMODS.Back {
                 return true
             end
         }))
+	end
+}
+
+
+SMODS.Back {
+	key = "snake",
+	atlas = "decks",
+	pos = {x=6,y=1},
+	config = {hands = 1,discards = 1},
+	apply = function (self, back)
+		G.GAME.SGTMD_MOD = G.GAME.SGTMD_MOD or {}
+		G.GAME.SGTMD_MOD.limitdraw = 3
+	end
+}
+
+local setabitref = Card.set_ability
+function Card:set_ability(center, initial, delay_sprites)
+	local ret = setabitref(self, center, initial, delay_sprites)
+	if G.GAME.selected_back then
+	G.GAME.selected_back:trigger_effect({modify_playing_card = true,card = self,center = center})
+	end
+	return ret
+end
+
+SMODS.Back {
+	key = "stone",
+	atlas = "decks",
+	pos = {x=6,y=2},
+	config = {joker_slot = -4},
+	apply = function (self, back)
+		G.GAME.SGTMD_MOD = G.GAME.SGTMD_MOD or {}
+		G.GAME.SGTMD_MOD.stonedeckcount = 0
+
+	end,
+	calculate = function (self, back, context)
+		if context.modify_playing_card or context.final_scoring_step then
+			local stonecount = 0
+			
+			for x=1,#G.playing_cards do
+				local ccard = G.playing_cards[x]
+				if ccard.config.center == G.P_CENTERS.m_stone then stonecount = stonecount +1 end
+			end
+			if math.floor(stonecount/10) ~= G.GAME.SGTMD_MOD.stonedeckcount then
+				local diff =  math.floor(stonecount/10) - G.GAME.SGTMD_MOD.stonedeckcount
+				G.E_MANAGER:add_event(Event({func = function()
+					if G.jokers then 
+						G.jokers.config.card_limit = G.jokers.config.card_limit + diff
+					end
+					return true end }))
+				G.GAME.SGTMD_MOD.stonedeckcount  = G.GAME.SGTMD_MOD.stonedeckcount +diff
+			end
+		end
+	end
+}
+
+TMD.wilddeckrandoms = {{"dollars",1},{"xmult",1.1},{"mult",5},{"chips",50}}
+
+SMODS.Back {
+	key = "wild",
+	atlas = "decks",
+	pos = {x=7,y=3},
+	calculate = function (self, back, context)
+		if context.individual and context.cardarea == G.play then
+			if context.other_card.config.center == G.P_CENTERS.m_wild then
+			local opt = pseudorandom_element(TMD.wilddeckrandoms,pseudoseed("wilddeck"))
+			return {
+				[opt[1]] = opt[2],
+				card = context.other_card
+			}
+		end
+		end
+		if context.final_scoring_step then
+			local wildcount = 0
+			
+			for x=1,#G.playing_cards do
+				local ccard = G.playing_cards[x]
+				if ccard.config.center == G.P_CENTERS.m_wild then wildcount = wildcount +1 end
+			end
+			return {
+				chips = wildcount*10
+			}
+		end
 	end
 }
 

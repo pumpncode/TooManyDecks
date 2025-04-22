@@ -8,6 +8,20 @@ SMODS.ConsumableType {
         
     }
 }
+
+TMD.paints = {redyellow="orange",redgreen="blue",yellowgreen="teal",redteal="white",yellowblue="white",greenorange="white"}
+
+function paintcheck(scard,ocard)
+    
+    if TMD.paints[scard..ocard] or TMD.paints[ocard..scard]then
+        local o = TMD.paints[scard..ocard] or TMD.paints[ocard..scard]
+        return o
+    else
+        return "sludge"
+    end
+end
+
+
 SMODS.Atlas {
     key = "paints",
     px = 71,
@@ -254,7 +268,7 @@ SMODS.Edition {
 SMODS.Consumable {
     key = "red",
     set = "paint",
-    config = {extra = {cards = 1}},
+    config = {extra = {cards = 1,pk="red"}},
     loc_vars = function (self, info_queue, card)
         info_queue[#info_queue+1] = G.P_CENTERS.e_SGTMD_red
         return{ vars = { card.ability.extra.cards }}
@@ -279,15 +293,10 @@ SMODS.Consumable {
         elseif G.hand.highlighted[1] then
             G.hand.highlighted[1]:set_edition("e_SGTMD_red")
         else
-            if G.consumeables.highlighted[1].ability.name == "c_SGTMD_yellow" then
+            if G.consumeables.highlighted[1].ability.extra.pk then
+                local t = paintcheck(card.ability.extra.pk,G.consumeables.highlighted[1].ability.extra.pk)
+                SMODS.add_card {key = "c_SGTMD_"..t}
                 G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_orange"}
-            elseif G.consumeables.highlighted[1].ability.name == "c_SGTMD_blue" then
-                G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_teal"}
-            elseif G.consumeables.highlighted[1].ability.set  == "paint" and not G.consumeables.highlighted[1].ability.name == "c_SGTMD_sludge" then
-                G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_sludge"}
             else
                 G.consumeables.highlighted[1]:set_edition("e_SGTMD_red")
             end
@@ -298,7 +307,7 @@ SMODS.Consumable {
 SMODS.Consumable {
     key = "orange",
     set = "paint",
-    config = {extra = {cards = 1}},
+    config = {extra = {cards = 1,pk="orange"}},
     loc_vars = function (self, info_queue, card)
         info_queue[#info_queue+1] = G.P_CENTERS.e_SGTMD_orange
         return{ vars = { card.ability.extra.cards }}
@@ -324,15 +333,10 @@ SMODS.Consumable {
         elseif G.hand.highlighted[1] then
             G.hand.highlighted[1]:set_edition("e_SGTMD_orange")
         else
-            if G.consumeables.highlighted[1].ability.name == "c_SGTMD_blue" then
+            if G.consumeables.highlighted[1].ability.extra.pk then
+                local t = paintcheck(card.ability.extra.pk,G.consumeables.highlighted[1].ability.extra.pk)
+                SMODS.add_card {key = "c_SGTMD_"..t}
                 G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_white"}
-            elseif G.consumeables.highlighted[1].ability.name == "c_SGTMD_white" then
-                G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_yellow"}
-            elseif G.consumeables.highlighted[1].ability.set == "paint" and not G.consumeables.highlighted[1].ability.name == "c_SGTMD_sludge" then
-                G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_sludge"}
             else
                 G.consumeables.highlighted[1]:set_edition("e_SGTMD_orange")
             end
@@ -343,7 +347,7 @@ SMODS.Consumable {
 SMODS.Consumable {
     key = "yellow",
     set = "paint",
-    config = {extra = {cards = 1}},
+    config = {extra = {cards = 1,pk="yellow"}},
     loc_vars = function (self, info_queue, card)
         info_queue[#info_queue+1] = G.P_CENTERS.e_SGTMD_yellow
         return{ vars = { card.ability.extra.cards }}
@@ -369,15 +373,10 @@ SMODS.Consumable {
         elseif G.hand.highlighted[1] then
             G.hand.highlighted[1]:set_edition("e_SGTMD_yellow")
         else
-            if G.consumeables.highlighted[1].ability.name == "c_SGTMD_blue" then
+            if G.consumeables.highlighted[1].ability.extra.pk then
+                local t = paintcheck(card.ability.extra.pk,G.consumeables.highlighted[1].ability.extra.pk)
+                SMODS.add_card {key = "c_SGTMD_"..t}
                 G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_green"}
-            elseif G.consumeables.highlighted[1].ability.name == "c_SGTMD_red" then
-                G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_orange"}
-            elseif G.consumeables.highlighted[1].ability.set  == "paint" and not G.consumeables.highlighted[1].ability.name == "c_SGTMD_sludge" then
-                G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_sludge"}
             else
                 G.consumeables.highlighted[1]:set_edition("e_SGTMD_yellow")
             end
@@ -388,7 +387,7 @@ SMODS.Consumable {
 SMODS.Consumable {
     key = "green",
     set = "paint",
-    config = {extra = {cards = 1}},
+    config = {extra = {cards = 1,pk="green"}},
     loc_vars = function (self, info_queue, card)
         info_queue[#info_queue+1] = G.P_CENTERS.e_SGTMD_green
         return{ vars = { card.ability.extra.cards }}
@@ -414,15 +413,10 @@ SMODS.Consumable {
         elseif G.hand.highlighted[1] then
             G.hand.highlighted[1]:set_edition("e_SGTMD_green")
         else
-            if G.consumeables.highlighted[1].ability.name == "c_SGTMD_blue" then
+            if G.consumeables.highlighted[1].ability.extra.pk then
+                local t = paintcheck(card.ability.extra.pk,G.consumeables.highlighted[1].ability.extra.pk)
+                SMODS.add_card {key = "c_SGTMD_"..t}
                 G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_teal"}
-            elseif G.consumeables.highlighted[1].ability.name == "c_SGTMD_red" then
-                G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_white"}
-            elseif G.consumeables.highlighted[1].ability.set  == "paint" and not G.consumeables.highlighted[1].ability.name == "c_SGTMD_sludge" then
-                G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_sludge"}
             else
                 G.consumeables.highlighted[1]:set_edition("e_SGTMD_green")
             end
@@ -433,7 +427,7 @@ SMODS.Consumable {
 SMODS.Consumable {
     key = "blue",
     set = "paint",
-    config = {extra = {cards = 1}},
+    config = {extra = {cards = 1,pk="blue"}},
     loc_vars = function (self, info_queue, card)
         info_queue[#info_queue+1] = G.P_CENTERS.e_SGTMD_blue
         return{ vars = { card.ability.extra.cards }}
@@ -459,18 +453,10 @@ SMODS.Consumable {
         elseif G.hand.highlighted[1] then
             G.hand.highlighted[1]:set_edition("e_SGTMD_blue")
         else
-            if G.consumeables.highlighted[1].ability.name == "c_SGTMD_yellow" then
+            if G.consumeables.highlighted[1].ability.extra.pk then
+                local t = paintcheck(card.ability.extra.pk,G.consumeables.highlighted[1].ability.extra.pk)
+                SMODS.add_card {key = "c_SGTMD_"..t}
                 G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_green"}
-            elseif G.consumeables.highlighted[1].ability.name == "c_SGTMD_red" then
-                G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_teal"}
-            elseif G.consumeables.highlighted[1].ability.name == "c_SGTMD_white" then
-                G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_teal"}
-            elseif G.consumeables.highlighted[1].ability.set  == "paint" and not G.consumeables.highlighted[1].ability.name == "c_SGTMD_sludge" then
-                G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_sludge"}
             else
                 G.consumeables.highlighted[1]:set_edition("e_SGTMD_blue")
             end
@@ -481,7 +467,7 @@ SMODS.Consumable {
 SMODS.Consumable {
     key = "teal",
     set = "paint",
-    config = {extra = {cards = 1}},
+    config = {extra = {cards = 1,pk="teal"}},
     loc_vars = function (self, info_queue, card)
         info_queue[#info_queue+1] = G.P_CENTERS.e_SGTMD_teal
         return{ vars = { card.ability.extra.cards }}
@@ -508,12 +494,10 @@ SMODS.Consumable {
         elseif G.hand.highlighted[1] then
             G.hand.highlighted[1]:set_edition("e_SGTMD_teal")
         else
-            if G.consumeables.highlighted[1].ability.name == "c_SGTMD_yellow" then
+            if G.consumeables.highlighted[1].ability.extra.pk then
+                local t = paintcheck(card.ability.extra.pk,G.consumeables.highlighted[1].ability.extra.pk)
+                SMODS.add_card {key = "c_SGTMD_"..t}
                 G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_white"}
-            elseif G.consumeables.highlighted[1].ability.set  == "paint" and not G.consumeables.highlighted[1].ability.name == "c_SGTMD_sludge" then
-                G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_sludge"}
             else
                 G.consumeables.highlighted[1]:set_edition("e_SGTMD_teal")
             end
@@ -526,7 +510,7 @@ SMODS.Consumable {
 SMODS.Consumable {
     key = "white",
     set = "paint",
-    config = {extra = {cards = 1}},
+    config = {extra = {cards = 1,pk="white"}},
     loc_vars = function (self, info_queue, card)
         info_queue[#info_queue+1] = G.P_CENTERS.e_SGTMD_white
         return{ vars = { card.ability.extra.cards }}
@@ -552,21 +536,10 @@ SMODS.Consumable {
         elseif G.hand.highlighted[1] then
             G.hand.highlighted[1]:set_edition("e_SGTMD_white")
         else
-            if G.consumeables.highlighted[1].ability.name == "c_SGTMD_blue" then
+            if G.consumeables.highlighted[1].ability.extra.pk then
+                local t = paintcheck(card.ability.extra.pk,G.consumeables.highlighted[1].ability.extra.pk)
+                SMODS.add_card {key = "c_SGTMD_"..t}
                 G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_teal"}
-                --[[
-            elseif G.consumeables.highlighted[1].ability.name == "c_SGTMD_sludge" then
-                G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_black"}
-                
-            elseif G.consumeables.highlighted[1].ability.name == "c_SGTMD_black" then
-                G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_gray"}
-                ]]
-            elseif G.consumeables.highlighted[1].ability.set == "paint" and not G.consumeables.highlighted[1].ability.name == "c_SGTMD_sludge" then
-                G.consumeables.highlighted[1]:start_dissolve()
-                SMODS.add_card {key = "c_SGTMD_sludge"}
             else
                 G.consumeables.highlighted[1]:set_edition("e_SGTMD_white")
             end
