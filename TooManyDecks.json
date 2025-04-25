@@ -6,7 +6,7 @@
 	"description": "Adds 21 new decks!",
 	"prefix": "SGTMD",
 	"main_file": "main.lua",
-	"priority": 0,
+	"priority": 115,
 	"badge_colour": "42f587",
 	"badge_text_colour": "ffffff",
 	"version": "3.2.1",

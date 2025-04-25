@@ -600,3 +600,44 @@ CardSleeves.Sleeve {
         end
     end,
 }
+
+CardSleeves.Sleeve {
+	key = "tds",
+	atlas = "decks sleeves",
+	pos = {x=2, y=2},
+	config = {no_interest = true},
+    loc_vars = function(self)
+        local key
+        if self.get_current_deck_key() == "b_SGTMD_tds" then
+            key = self.key .. "_alt"
+            
+            self.config = {no_interest = true,extra_hand_bonus = 0}
+        else
+            key = self.key
+            self.config = {no_interest = true}
+        end
+        
+        return { key = key }
+        
+    end,
+	calculate = function (self, back, context)
+		if (context.buying_card or (context.open_booster and not context.card.from_tag)) and not G.GAME.selected_back.name == "b_SGTMD_tds"then
+			
+			G.E_MANAGER:add_event(Event({
+				trigger = "after",
+				delay = 0.1,
+				func = function ()
+					local startrerollcost = G.GAME.current_round.reroll_cost
+					if (to_number(G.GAME.dollars-context.card.cost) - math.floor(G.GAME.current_round.reroll_cost/2) >= 0) 
+					then
+					G.GAME.current_round.reroll_cost = math.floor(G.GAME.current_round.reroll_cost/2)
+					G.FUNCS.reroll_shop()
+					G.GAME.current_round.reroll_cost = startrerollcost + 1
+				end
+			return true
+				end
+			}))
+			
+		end
+	end
+}

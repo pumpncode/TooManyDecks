@@ -30,7 +30,57 @@ to_number = to_number or function (x) return x end
 
 TMD = {}
 
--- Credit to multiplayer mod for finding this code in cryptids code
+-- Credit to cryptid
+local oldfunc = Game.main_menu
+	Game.main_menu = function(change_context)
+		local ret = oldfunc(change_context)
+		-- adds a Cryptid spectral to the main menu
+		local bbb = "b_SGTMD_argyle"
+		if math.random() < 0.1 then
+			bbb = "b_SGTMD_prodeck"
+		end
+		local newcard = Card(
+			G.title_top.T.x,
+			G.title_top.T.y,
+			G.CARD_W,
+			G.CARD_H,
+			G.P_CARDS.empty,
+			G.P_CENTERS[bbb],
+			{ bypass_discovery_center = true }
+		)
+		-- recenter the title
+		if not Cryptid then
+		G.title_top.T.w = G.title_top.T.w * 1.7675
+		G.title_top.T.x = G.title_top.T.x - 0.8
+		end
+
+		G.title_top:emplace(newcard)
+		-- make the card look the same way as the title screen Ace of Spades
+		newcard.T.w = newcard.T.w * 1.1 * 1.2
+		newcard.T.h = newcard.T.h * 1.1 * 1.2
+		newcard.no_ui = true
+		newcard.states.visible = false
+
+
+		G.E_MANAGER:add_event(Event({
+			trigger = "after",
+			delay = 0,
+			blockable = false,
+			blocking = false,
+			func = function()
+				if change_context == "splash" then
+					newcard.states.visible = true
+					newcard:start_materialize({ G.C.WHITE, G.C.WHITE }, true, 2.5)
+				else
+					newcard.states.visible = true
+					newcard:start_materialize({ G.C.WHITE, G.C.WHITE }, nil, 1.2)
+				end
+				return true
+			end,
+		}))
+
+		return ret
+	end
 
 
 TMD.splashpos = {{x=5,y=0},{x=1,y=0},{x=2,y=0},{x=3,y=0},{x=4,y=0},
@@ -966,6 +1016,76 @@ SMODS.Back {
 		end
 	end
 }
+
+
+
+local ccr = create_card
+
+
+create_card = function(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append)
+
+	local ret = ccr(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append)
+	if _type == "Joker" and G.GAME and ( G.GAME.selected_back.name == "b_SGTMD_tds" or G.GAME.selected_sleeve == "sleeve_SGTMD_tds" )
+	and ret.config.center.eternal_compat then
+		ret:set_eternal(true)
+	end
+	if _type == "Joker" and G.GAME and 
+	G.GAME.selected_back.name == "b_SGTMD_tds" and G.GAME.selected_sleeve == "sleeve_SGTMD_tds" then
+		ret:set_rental(true)
+	end
+	return ret
+end
+
+local emr = ease_dollars
+function  ease_dollars(mod, instant)
+	TMD.easing_dollar = nil
+
+	local ret = emr(mod,instant)
+	G.E_MANAGER:add_event(Event({
+		func = function( )
+	if G.GAME and G.GAME.selected_back.name == "b_SGTMD_tds" or G.GAME.selected_sleeve == "sleeve_SGTMD_tds" then
+		G.GAME.dollars = math.min(50, G.GAME.dollars) 
+	end
+	if G.GAME and G.GAME.selected_back.name == "b_SGTMD_tds" and G.GAME.selected_sleeve == "sleeve_SGTMD_tds" then
+		G.GAME.dollars = math.min(35, G.GAME.dollars) 
+	end
+	return true
+	end
+	}))
+	TMD.easing_dollar = true
+	return ret
+end
+
+SMODS.Back {
+	key = "tds",
+	atlas = "decks",
+	pos = {x=7,y=1},
+	config = {no_interest = true},
+	calculate = function (self, back, context)
+		if context.buying_card or (context.open_booster and not context.card.from_tag) then
+			
+			G.E_MANAGER:add_event(Event({
+				trigger = "after",
+				delay = 0.1,
+				func = function ()
+					local startrerollcost = G.GAME.current_round.reroll_cost
+					if (to_number(G.GAME.dollars-context.card.cost) - math.floor(G.GAME.current_round.reroll_cost/2) >= 0)
+					or  G.GAME.selected_sleeve == "sleeve_SGTMD_tds"
+					then
+						if not G.GAME.selected_sleeve == "sleeve_SGTMD_tds" then
+						G.GAME.current_round.reroll_cost = math.floor(G.GAME.current_round.reroll_cost/2)
+						end
+					G.FUNCS.reroll_shop()
+					G.GAME.current_round.reroll_cost = startrerollcost + 1
+				end
+			return true
+				end
+			}))
+			
+		end
+	end
+}
+
 
 assert(SMODS.load_file("items/iamgoingtohaveaheadache.lua"))()
 if CardSleeves then assert(SMODS.load_file("items/sleeves.lua"))() end

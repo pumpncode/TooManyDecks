@@ -190,6 +190,16 @@ return {
                     "Scored {C:attention,T:m_wild}Wild cards{} give random effects",
                     "{C:blue}+10{} chips for every","{C:attention,T:m_wild}Wild card{} in full deck"
                 }
+            },
+            b_SGTMD_tds = {
+                name = "This Deck Sucks",
+                text = {
+                    "All {C:attention}Jokers{} are {C:tarot}Eternal{} (If possible)",
+                    "{C:money}Money{} is limited to {C:money}$50",
+                    "{C:attention}No interest{}",
+                    "Buying {C:attention}ANYTHING{} in the shop will","{C:green}reroll the shop{} for {C:attention}half the cost",
+                    "{C:inactive}(Won't reroll if you cant afford)"
+                }
             }
         },
         Sleeve={
@@ -310,8 +320,27 @@ return {
                     "all {C:hearts}Hearts{} cards will get",
                     "converted to {C:spades}Spades{}"}
             },
+            sleeve_SGTMD_tds = {
+                name = "This Sleeve Sucks",
+                text = {
+                    "All {C:attention}Jokers{} are {C:tarot}Eternal{} (If possible)",
+                    "{C:money}Money{} is limited to {C:money}$50",
+                    "{C:attention}No interest{}",
+                    "Buying {C:attention}ANYTHING{} in the shop will","{C:green}reroll the shop{} for {C:attention}half the cost",
+                    "{C:inactive}(Won't reroll if you cant afford)"
+                }
+            },
+            sleeve_SGTMD_tds_alt = {
+                name = "This Combo Sucks",
+                text = {
+                    "All {C:attention}Jokers{} are {C:tarot}Eternal{} and {C:money}Rental",
+                    "{C:money}Money{} is limited to {C:money}$35",
+                    "{C:attention}No interest or money from {C:blue}Hands{}",
+                    "Buying {C:attention}ANYTHING{} in the shop will","{C:green}reroll the shop{} for {C:attention}the full cost",
+                    "{C:inactive}(WILL reroll  regardless of if you can afford)"
+                }
+            }
         }
-
         },
         Blind={},
         Edition={},

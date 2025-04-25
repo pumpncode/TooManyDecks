@@ -31,9 +31,16 @@ SMODS.Atlas {
 
 SMODS.Shader( {key = "paint",path = "paint.fs",
 send_vars = function (sprite, card)
-    return {
-        ext = card.edition.ext
-    }
+    if card then
+        return {
+            ext = card.edition.ext
+        }
+    else
+        return {
+            ext = {0,1,1}
+        }
+    end
+    
 end,})
 
 
