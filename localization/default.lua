@@ -200,6 +200,14 @@ return {
                     "Buying {C:attention}ANYTHING{} in the shop will","{C:green}reroll the shop{} for {C:attention}half the cost",
                     "{C:inactive}(Won't reroll if you cant afford)"
                 }
+            },
+            b_SGTMD_roffledeck = {
+                name = "Roffle Deck",
+                text = {
+                    "{C:green}> Roffle Deck",
+                    "{C:green}> Look inside",
+                    "{C:green}> {C:attention,T:j_photograph}Photo{C:attention,T:j_hanging_chad}chad"
+                }
             }
         },
         Sleeve={

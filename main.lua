@@ -1023,6 +1023,18 @@ local ccr = create_card
 
 
 create_card = function(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append)
+	
+	if _type == "Joker" and G.GAME and G.GAME.selected_back and G.GAME.selected_back.name == "b_SGTMD_roffledeck" then
+		if pseudorandom("roffledeck") >.5 then
+			forced_key = "j_photograph"
+		else
+			forced_key = "j_hanging_chad"
+		end
+		if _rarity == 4 or legendary then
+			forced_key = "j_triboulet"
+		end
+	end
+
 
 	local ret = ccr(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append)
 	if _type == "Joker" and G.GAME and ( G.GAME.selected_back.name == "b_SGTMD_tds" or G.GAME.selected_sleeve == "sleeve_SGTMD_tds" )
@@ -1086,6 +1098,18 @@ SMODS.Back {
 	end
 }
 
+SMODS.Atlas {
+	key = "lookinside",
+	path = "roffledecklookinsidephotochad.png",
+	px = 71,
+	py = 95
+}
+
+SMODS.Back {
+	key ="roffledeck",
+	atlas = "lookinside",
+	pos = {x=0,y=0}
+}
 
 assert(SMODS.load_file("items/iamgoingtohaveaheadache.lua"))()
 if CardSleeves then assert(SMODS.load_file("items/sleeves.lua"))() end
