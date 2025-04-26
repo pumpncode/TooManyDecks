@@ -664,6 +664,7 @@ CardSleeves.Sleeve {
     apply = function (self)
         if self.config.combo then
             G.GAME.stake = 8
+            SMODS.setup_stake(G.GAME.stake)
         end
     end
 }
