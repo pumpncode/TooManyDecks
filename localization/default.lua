@@ -347,6 +347,22 @@ return {
                     "Buying {C:attention}ANYTHING{} in the shop will","{C:green}reroll the shop{} for {C:attention}the full cost",
                     "{C:inactive}(WILL reroll  regardless of if you can afford)"
                 }
+            },
+            sleeve_SGTMD_roffledeck = {
+                name = "Roffle Sleeve",
+                text = {
+                    "{C:green}> Roffle Sleeve",
+                    "{C:green}> Look inside",
+                    "{C:green}> {C:attention,T:j_photograph}Photo{C:attention,T:j_hanging_chad}chad"
+                }
+            },
+            sleeve_SGTMD_roffledeck_alt = {
+                name = "Roffle Sleeve",
+                text = {
+                    "{C:green}> Roffle Deck + Sleeve combo",
+                    "{C:green}> Look inside",
+                    "{C:green}> {C:money}Gold Stake Balatro{}"
+                }
             }
         }
         },

@@ -641,3 +641,29 @@ CardSleeves.Sleeve {
 		end
 	end
 }
+
+
+CardSleeves.Sleeve {
+	key ="roffledeck",
+	atlas = "decks sleeves",
+	pos = {x=3,y=2},
+    loc_vars = function(self)
+        local key
+        if self.get_current_deck_key() == "b_SGTMD_roffledeck" then
+            key = self.key .. "_alt"
+            
+            self.config = {combo = true}
+        else
+            key = self.key
+            self.config = {}
+        end
+        
+        return { key = key }
+        
+    end,
+    apply = function (self)
+        if self.config.combo then
+            G.GAME.stake = 8
+        end
+    end
+}
