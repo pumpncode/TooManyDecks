@@ -549,6 +549,8 @@ function Card:update(dt)
         self.facing='back'
         self.sprite_facing = 'back'
 		self.pinch.x = false
+		self.ability.wheel_flipped = true
+		
 	end
 	return ret
 end
@@ -559,7 +561,6 @@ function CardArea:emplace(card, location, stay_flipped)
 
 		if G.GAME.selected_back.effect.center.key == "b_SGTMD_invisible" and (card.area == G.hand or card.area == G.jokers)  then
 			card.ability.SGTMD_PermaFlip = true
-			
 		else
 			card.ability.SGTMD_PermaFlip = false
 		end

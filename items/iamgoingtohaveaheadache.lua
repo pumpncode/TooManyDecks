@@ -303,7 +303,7 @@ end --final end
 SMODS.Keybind {
     key_pressed = "space",
     action = function (self)
-        if G.GAME and G.GAME.selected_back.effect.center.key == "b_SGTMD_thereisnogod" and to_number(G.GAME.dollars) - 5 >=0 and G.GAME.blind.in_blind then
+        if G.GAME and  G.GAME.selected_back and G.GAME.selected_back.effect.center.key == "b_SGTMD_thereisnogod" and to_number(G.GAME.dollars) - 5 >=0 and G.GAME.blind.in_blind then
             ease_dollars(-5)
             ease_hands_played(1)
         end
