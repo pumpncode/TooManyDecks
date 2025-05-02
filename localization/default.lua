@@ -53,6 +53,7 @@ return {
                     "{C:red}-1{} consumeable slot",
                     "Earn no {C:attention}Interest{}"
                 },
+
             
            
                 unlock = {"Win a run with","{C:attention}Fuck you{}","on any difficulty"}
@@ -207,6 +208,12 @@ return {
                     "{C:green}> Roffle Deck",
                     "{C:green}> Look inside",
                     "{C:green}> {C:attention,T:j_photograph}Photo{C:attention,T:j_hanging_chad}chad"
+                }
+            },
+            b_SGTMD_midas = {
+                name = "Midas Deck",
+                text = {
+                    "adiuhgiduhgdiagwdioavwdiy"
                 }
             }
         },

@@ -1025,7 +1025,7 @@ local ccr = create_card
 
 create_card = function(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append)
 	
-	if _type == "Joker" and G.GAME and G.GAME.selected_back and (G.GAME.selected_back.name == "b_SGTMD_roffledeck" or  G.GAME.selected_sleeve == "sleeve_SGTMD_roffledeck") then
+	if pseudorandom("rofdeckya") > 0.85 and not forced_key and _type == "Joker" and G.GAME and G.GAME.selected_back and (G.GAME.selected_back.name == "b_SGTMD_roffledeck" or  G.GAME.selected_sleeve == "sleeve_SGTMD_roffledeck") then
 		if pseudorandom("roffledeck") >.5 then
 			forced_key = "j_photograph"
 		else
