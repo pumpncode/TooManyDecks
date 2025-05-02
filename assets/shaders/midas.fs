@@ -47,13 +47,13 @@ vec4 effect( vec4 colour, Image texture, vec2 texture_coords, vec2 screen_coords
         lines_offset >  0. && (line(uv, 0.0, 0.07) || line(uv, 0.4, 0.1) || line(uv, 0.55, 0.1) || line(uv, 1.3, 0.05) || line(uv, 1.8, 0.1)) ||
         lines_offset <= 0. && (line(uv, -0.2, 0.13) || line(uv, 0.3, 0.05) || line(uv, 0.8, 0.1) || line(uv, 1.3, 0.11) || line(uv, 1.7, 0.07))
     ) {
-        tex.a = tex.a * 2.;
+        tex.a = tex.a * 1.25;
     } else {
-        tex.a = 0.05;
+        tex.a =0;
     }
 
     float avg = (pixel.r + pixel.g + pixel.b) / 3.;
-    pixel = vec4(gold_color.rgb * avg + tex.rgb * tex.a, 1.);
+    pixel = vec4(pixel.rgb + tex.rgb * tex.a, pixel.a);
     
 
 	return dissolve_mask(pixel, texture_coords, uv);

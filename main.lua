@@ -683,8 +683,8 @@ SMODS.Back {
 			G.STATE = G.STATES.GAME_OVER; G.STATE_COMPLETE = false 
 		end
 		
-
 		if context.final_scoring_step then
+			
 			if math.floor(to_number(hand_chips)/500) > 0 then
 			return {dollars = math.floor(to_number(hand_chips)/500) }
 			end
@@ -1111,6 +1111,38 @@ SMODS.Back {
 	atlas = "lookinside",
 	pos = {x=0,y=0}
 }
+
+SMODS.Back {
+	key = "midas",
+	atlas = "decks",
+	pos = {x=0,y=4},
+	dependencies = {
+		"najudbnawiudbawidvgawidagwidgwydhagwdkjyuawfgvd"
+	}
+}
+
+SMODS.Shader {key = "midas", path = "midas.fs"}
+
+SMODS.DrawStep {
+    key = 'gold_deck',
+    order = 60,
+    func = function(self)
+        if self.children.back then
+			if (((G.GAME.selected_back.name == "b_SGTMD_midas" and self.back == "selected_back") or (G.GAME.viewed_back.name == "b_SGTMD_midas" and self.back == "viewed_back")) 
+			and (self.config.center.set ~= "Back" and self.config.center.set ~= "Sleeve")) or self.config.center.key == "b_SGTMD_midas"
+			and not self.area.config.stake_select and not self.area.config.stake_chips then
+				local t = self.area.config.type == "deck" or self.config.center.set == "Back" 
+				if t then self.ARGS.send_to_shader = {0,0} end
+			--self.children.back:draw_shader('voucher',0, nil, t, self.children.center,scale_mod, rotate_mod,nil, 0.1 + 0.03*math.sin(1.8*G.TIMERS.REAL),nil, 0.6)
+			self.children.back:draw_shader('SGTMD_midas', nil, self.ARGS.send_to_shader, t, self.children.center, 0,0)
+
+
+        end
+	end
+    end,
+    conditions = { vortex = false, facing = 'back' },
+}
+
 
 assert(SMODS.load_file("items/iamgoingtohaveaheadache.lua"))()
 if CardSleeves then assert(SMODS.load_file("items/sleeves.lua"))() end
