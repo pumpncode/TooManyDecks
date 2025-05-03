@@ -998,7 +998,7 @@ create_card = function(_type, area, legendary, _rarity, skip_materialize, soulab
 	-- 	end
 	-- end
 	local ret = {}
-	if G.STAGES.RUN then
+	if G.STAGE == G.STAGES.RUN then
 		if G.GAME.selected_back.effect.center.card_creation then ret = G.GAME.selected_back.effect.center.card_creation(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append, nil) end
 		if ret then _type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append = unpack(ret) end
 		if CardSleeves and CardSleeves.Sleeve:get_obj(G.GAME.selected_sleeve).card_creation then ret = CardSleeves.Sleeve:get_obj(G.GAME.selected_sleeve).card_creation(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append, nil) end
