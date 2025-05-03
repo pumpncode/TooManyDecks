@@ -639,6 +639,13 @@ CardSleeves.Sleeve {
 			}))
 			
 		end
+	end,
+    card_creation = function(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append)
+		if _type ~= "Joker" or not created_card then return end
+        created_card:set_eternal(true)
+		if G.GAME.selected_back.name == "b_SGTMD_tds" then
+			created_card:set_rental(true)
+		end
 	end
 }
 
@@ -666,5 +673,19 @@ CardSleeves.Sleeve {
             G.GAME.stake = 8
             SMODS.setup_stake(G.GAME.stake)
         end
-    end
+    end,
+    card_creation = function(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append, created_card)
+		if created_card or _type ~= "Joker" or forced_key then return end
+		if pseudorandom("rofdeckya") > 0.85 then return end
+
+		if pseudorandom("roffledeck") >.5 then
+			forced_key = "j_photograph"
+		else
+			forced_key = "j_hanging_chad"
+		end
+		if _rarity == 4 or legendary then
+			forced_key = "j_triboulet"
+		end
+		return {_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append}
+	end
 }

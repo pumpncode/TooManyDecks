@@ -97,22 +97,21 @@ SMODS.Back {
     calculate = function (self, back, context)
         -- mards
         if context.final_scoring_step and context.scoring_name == "Two Pair" then
-            if (function ()
-                
+            local cont = false
+
             for _,card in ipairs(context.scoring_hand) do
-                
-                if card.base.value == "9" or  card.base.value == "2" then return true end
+                if card.base.value == "9" or  card.base.value == "2" then cont = true end
             end
-            return false
-        end)() then
-            G.E_MANAGER:add_event(Event({
-                func = function ()
-                    SMODS.add_card({key = "c_mars"})
-                    
-                    return true
-                end
-            }))
-        end
+
+            if cont then
+                G.E_MANAGER:add_event(Event({
+                    func = function ()
+                        SMODS.add_card({key = "c_mars"})
+                        
+                        return true
+                    end
+                }))
+            end
         end
         -- the twoersdwerasdwe dat makesd cards erditioned
     if context.using_consumeable  and context.consumeable.label == "The Tower" then
