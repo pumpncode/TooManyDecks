@@ -987,37 +987,19 @@ local ccr = create_card
 
 create_card = function(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append)
 	
-	-- if pseudorandom("rofdeckya") > 0.85 and not forced_key and _type == "Joker" and G.GAME and G.GAME.selected_back and (G.GAME.selected_back.name == "b_SGTMD_roffledeck" or  G.GAME.selected_sleeve == "sleeve_SGTMD_roffledeck") then
-	-- 	if pseudorandom("roffledeck") >.5 then
-	-- 		forced_key = "j_photograph"
-	-- 	else
-	-- 		forced_key = "j_hanging_chad"
-	-- 	end
-	-- 	if _rarity == 4 or legendary then
-	-- 		forced_key = "j_triboulet"
-	-- 	end
-	-- end
+
 	local ret = {}
-	if G.STAGE == G.STAGES.RUN then
-		if G.GAME.selected_back.effect.center.card_creation then ret = G.GAME.selected_back.effect.center.card_creation(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append, nil) end
-		if ret then _type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append = unpack(ret) end
-		if CardSleeves and CardSleeves.Sleeve:get_obj(G.GAME.selected_sleeve).card_creation then ret = CardSleeves.Sleeve:get_obj(G.GAME.selected_sleeve).card_creation(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append, nil) end
-		if ret then _type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append = unpack(ret) end
-	end
+	if G.GAME.selected_back.effect.center.card_creation then ret = G.GAME.selected_back.effect.center.card_creation(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append, nil) end
+	if next(ret) then _type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append = unpack(ret) end
+	if CardSleeves and CardSleeves.Sleeve:get_obj(G.GAME.selected_sleeve).card_creation then ret = CardSleeves.Sleeve:get_obj(G.GAME.selected_sleeve).card_creation(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append, nil) end
+	if next(ret) then _type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append = unpack(ret) end
 
-	local ret = ccr(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append)
-	-- if _type == "Joker" and G.GAME and ( G.GAME.selected_back.name == "b_SGTMD_tds" or G.GAME.selected_sleeve == "sleeve_SGTMD_tds" ) then
-	-- 	if ret.config.center.eternal_compat then
-	-- 		ret:set_eternal(true)
-	-- 	end
-	-- 	if G.GAME.selected_back.name == "b_SGTMD_tds" and G.GAME.selected_sleeve == "sleeve_SGTMD_tds" then
-	-- 		ret:set_rental(true)
-	-- 	end
-	-- end
-	if G.GAME.selected_back.effect.center.card_creation then G.GAME.selected_back.effect.center.card_creation(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append, ret) end
-	if CardSleeves and CardSleeves.Sleeve:get_obj(G.GAME.selected_sleeve).card_creation then CardSleeves.Sleeve:get_obj(G.GAME.selected_sleeve).card_creation(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append, ret) end
+	local card = ccr(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append)
 
-	return ret
+	if G.GAME.selected_back.effect.center.card_creation then G.GAME.selected_back.effect.center.card_creation(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append, card) end
+	if CardSleeves and CardSleeves.Sleeve:get_obj(G.GAME.selected_sleeve).card_creation then CardSleeves.Sleeve:get_obj(G.GAME.selected_sleeve).card_creation(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append, card) end
+
+	return card
 end
 
 local emr = ease_dollars
@@ -1068,8 +1050,7 @@ SMODS.Back {
 		end
 	end,
 	card_creation = function(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append, created_card)
-        print('back_test: ' .. tostring(created_card ~= nil))
-		if _type ~= "Joker" then return end
+		if _type ~= "Joker" then return nil end
 		if created_card and created_card.config.center.eternal_compat then
 			created_card:set_eternal(true)
 		end
@@ -1088,8 +1069,8 @@ SMODS.Back {
 	atlas = "lookinside",
 	pos = {x=0,y=0},
 	card_creation = function(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append, created_card)
-		if created_card or _type ~= "Joker" or forced_key then return end
-		if pseudorandom("rofdeckya") > 0.85 then return end
+		if created_card or _type ~= "Joker" or forced_key then return nil end
+		if pseudorandom("rofdeckya") > 0.85 then return nil end
 
 		if pseudorandom("roffledeck") >.5 then
 			forced_key = "j_photograph"
