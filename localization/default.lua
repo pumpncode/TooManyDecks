@@ -215,6 +215,30 @@ return {
                 text = {
                     "adiuhgiduhgdiagwdioavwdiy"
                 }
+            },
+            b_SGTMD_editions = {
+                name = "Editions Deck",
+                text = {
+                    "Every card can have",
+                    "a random {C:dark_edition}Edition",
+                    "{C:red}-1 {C:blue}Hand{} & {C:blue}Hand Size"
+                }
+            },
+            b_SGTMD_seals = {
+                name = "Seals Deck",
+                text = {
+                    "Every card can have",
+                    "a random {C:dark_edition}Seal",
+                    "{C:red}-1 {C:blue}Hand{} & {C:blue}Hand Size"
+                }
+            },
+            b_SGTMD_enhancement = {
+                name = "Enhancement Deck",
+                text = {
+                    "Every card can have",
+                    "a random {C:dark_edition}Enhancement",
+                    "{C:red}-1 {C:blue}Hand{} & {C:blue}Hand Size"
+                }
             }
         },
         Sleeve={
@@ -253,58 +277,58 @@ return {
                 name = "Double Sleeve",
                 text = {"There are four of",
                         "every base card"}
-        },
-        sleeve_SGTMD_kingdom = {
-            name = "Kingdom Sleeve",
-            text = {"All non-face cards",
-                "are Jack's",
-            "{C:red}-2{} hand size",
-            "Earn no {C:attention}Interest{}"}
-        },
-        sleeve_SGTMD_kingdom_alt = {
-            name = "Kingdom Sleeve",
-            text = {"Only {C:attention}Face Cards{} can",
-            "show up this run"}
-        },
-        sleeve_SGTMD_fuckyou = {
-            name = "Fuck you",
-            text = {"You start with 1",
-            "card in your deck",
-            "{X:mult,C:white}X0.5{} Mult",
-            "Start at {C:attention}ante 0{}","Start with a {T:j_popcorn}popcorn{}",
-            "{s:2.0}Fuck You{}"}
-            
-        },
-        sleeve_SGTMD_fuckyou_alt = {
-            name = "Fuck You Too",
-            text = {"No more {C:attention}interest",
-            "start with {C:money}10 dollars{} of debt",
-            "{X:mult,C:white}X0.25{} Mult",
-            "Start with an additional {T:j_ice_cream}Ice Cream",
-            
-            "{s:2.0}Fuck You Too{}"}
-        },
-        sleeve_SGTMD_prosleeve = {
-            name = "Pro Sleeve",
-		    text = {
-			"{C:blue}+1{} hand {C:red}+1{} discard",
-			"{C:attention}+2{} hand size",
-			"Start with extra {C:money}$10{}",
-			"{X:mult,C:white}X1.4{} base Blind size",
-			"{C:red}-1{} consumable slot",
-			"Earn no {C:attention}Interest{}"
-		    },
-        },
-        sleeve_SGTMD_prosleeve_alt = {
-            name = "Pro Sleeve",
-		    text = {
-			"{C:blue}+1{} hand {C:red}+1{} discard",
-			"{C:attention}+3{} hand size",
-			"Start with extra {C:money}$12{}",
-			"{X:mult,C:white}X1.2{} base Blind size",
-			"You can earn {C:attention}Interest{}"
-		    },
-        },
+            },
+            sleeve_SGTMD_kingdom = {
+                name = "Kingdom Sleeve",
+                text = {"All non-face cards",
+                    "are Jack's",
+                "{C:red}-2{} hand size",
+                "Earn no {C:attention}Interest{}"}
+            },
+            sleeve_SGTMD_kingdom_alt = {
+                name = "Kingdom Sleeve",
+                text = {"Only {C:attention}Face Cards{} can",
+                "show up this run"}
+            },
+            sleeve_SGTMD_fuckyou = {
+                name = "Fuck you",
+                text = {"You start with 1",
+                "card in your deck",
+                "{X:mult,C:white}X0.5{} Mult",
+                "Start at {C:attention}ante 0{}","Start with a {T:j_popcorn}popcorn{}",
+                "{s:2.0}Fuck You{}"}
+                
+            },
+            sleeve_SGTMD_fuckyou_alt = {
+                name = "Fuck You Too",
+                text = {"No more {C:attention}interest",
+                "start with {C:money}10 dollars{} of debt",
+                "{X:mult,C:white}X0.25{} Mult",
+                "Start with an additional {T:j_ice_cream}Ice Cream",
+                
+                "{s:2.0}Fuck You Too{}"}
+            },
+            sleeve_SGTMD_prosleeve = {
+                name = "Pro Sleeve",
+                text = {
+                "{C:blue}+1{} hand {C:red}+1{} discard",
+                "{C:attention}+2{} hand size",
+                "Start with extra {C:money}$10{}",
+                "{X:mult,C:white}X1.4{} base Blind size",
+                "{C:red}-1{} consumable slot",
+                "Earn no {C:attention}Interest{}"
+                },
+            },
+            sleeve_SGTMD_prosleeve_alt = {
+                name = "Pro Sleeve",
+                text = {
+                "{C:blue}+1{} hand {C:red}+1{} discard",
+                "{C:attention}+3{} hand size",
+                "Start with extra {C:money}$12{}",
+                "{X:mult,C:white}X1.2{} base Blind size",
+                "You can earn {C:attention}Interest{}"
+                },
+            },
             sleeve_SGTMD_betrayal = {
                 name = "Sleeve of Betrayal",
 		        text = {"Start run with",

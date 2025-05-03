@@ -986,8 +986,6 @@ local ccr = create_card
 
 
 create_card = function(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append)
-	
-
 	local ret = {}
 	if G.GAME.selected_back.effect.center.card_creation then ret = G.GAME.selected_back.effect.center.card_creation(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append, nil) end
 	if next(ret) then _type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append = unpack(ret) end
@@ -1115,6 +1113,75 @@ SMODS.DrawStep {
     end,
     conditions = { vortex = false, facing = 'back' },
 }
+
+SMODS.Back {
+	key = "editions",
+	
+	config = {hands = -1,hand_size = -1},
+	
+	atlas = "decks",
+	pos = {x=0,y=0},
+	apply = function(self)
+		G.E_MANAGER:add_event(Event({
+            func = function()
+				for k, v in pairs(G.playing_cards) do
+					local edition = poll_edition('editions_deck', nil, nil, true)
+
+					if pseudorandom("editions_proc") >.2 then
+						v:set_edition(edition)
+					end
+				end
+                return true
+            end
+        }))
+	end
+}
+SMODS.Back {
+	key = "seals",
+	
+	config = {hands = -1,hand_size = -1},
+	
+	atlas = "decks",
+	pos = {x=0,y=0},
+	apply = function(self)
+		G.E_MANAGER:add_event(Event({
+            func = function()
+				for k, v in pairs(G.playing_cards) do
+					local seal = SMODS.poll_seal({ guaranteed = true, type_key = 'seals_deck' })
+
+					if pseudorandom("seals_proc") >.2 then
+						v:set_seal(seal)
+					end
+				end
+                return true
+            end
+        }))
+	end
+}
+
+SMODS.Back {
+	key = "enhancement",
+	
+	config = {hands = -1,hand_size = -1},
+	
+	atlas = "decks",
+	pos = {x=0,y=0},
+	apply = function(self)
+		G.E_MANAGER:add_event(Event({
+            func = function()
+				for k, v in pairs(G.playing_cards) do
+					local enhancement = SMODS.poll_enhancement({ guaranteed = true, type_key = 'enhancement_deck' })
+
+					if pseudorandom("enhancement_proc") >.2 then
+						v:set_ability(G.P_CENTERS[enhancement])
+					end
+				end
+                return true
+            end
+        }))
+	end
+}
+
 
 
 assert(SMODS.load_file("items/iamgoingtohaveaheadache.lua"))()
