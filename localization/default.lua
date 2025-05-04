@@ -219,25 +219,25 @@ return {
             b_SGTMD_editions = {
                 name = "Editions Deck",
                 text = {
-                    "Every card can have",
-                    "a random {C:dark_edition}Edition",
-                    "{C:red}-1 {C:blue}Hand{} & {C:blue}Hand Size"
+                    "Every playing card can start",
+                    "with a random {C:dark_edition}Edition",
+                    "{C:red}-1 {C:blue}Hand{} & {C:attention}Hand Size"
                 }
             },
             b_SGTMD_seals = {
                 name = "Seals Deck",
                 text = {
-                    "Every card can have",
-                    "a random {C:dark_edition}Seal",
-                    "{C:red}-1 {C:blue}Hand{} & {C:blue}Hand Size"
+                    "Every playing card can start",
+                    "with a random {C:dark_edition}Seal",
+                    "{C:red}-1 {C:blue}Hand{} & {C:attention}Hand Size"
                 }
             },
             b_SGTMD_enhancement = {
                 name = "Enhancement Deck",
                 text = {
-                    "Every card can have",
-                    "a random {C:dark_edition}Enhancement",
-                    "{C:red}-1 {C:blue}Hand{} & {C:blue}Hand Size"
+                    "Every playing card can start",
+                    "with a random {C:dark_edition}Enhancement",
+                    "{C:red}-1 {C:blue}Hand{} & {C:attention}Hand Size"
                 }
             }
         },
