@@ -299,24 +299,43 @@ SMODS.DrawStep {
     key = 'float_back',
     order = 60,
     func = function(self)
-        if self.children.back_float and (self.config.center.discovered or self.bypass_discovery_center) then
-            local scale_mod = 0.07 + 0.02*math.sin(1.8*G.TIMERS.REAL) + 0.00*math.sin((G.TIMERS.REAL - math.floor(G.TIMERS.REAL))*math.pi*14)*(1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL)))^3
-            local rotate_mod = 0.05*math.sin(1.219*G.TIMERS.REAL) + 0.00*math.sin((G.TIMERS.REAL)*math.pi*5)*(1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL)))^2
+		if self.children.float2 then
+			local cback = (not self.params.viewed_back and G.GAME.selected_back) or ( self.params.viewed_back and G.GAME.viewed_back) 
+			if cback then
+			
+				local t =( self.area and self.area.config.type == "deck") or self.config.center.set == "Back"
+				local aa = G.TIMERS.REAL + 1.5
+				local scale_mod = 0.02 + 0.02*math.sin(1.8*aa) + 0.00*math.sin((aa - math.floor(aa))*math.pi*14)*(1 - (aa - math.floor(aa)))^2.5
+				local rotate_mod = 0.05*math.sin(1.219*aa) + 0.00*math.sin((aa)*math.pi*5)*(1 - (aa - math.floor(aa)))^2
+	
+				if t then self.ARGS.send_to_shader = {1.0,1.0} end
+			--self.children.back:draw_shader('voucher',0, nil, t, self.children.center,scale_mod, rotate_mod,nil, 0.1 + 0.03*math.sin(1.8*aa),nil, 0.6)
+			
+			--self.children.float2:draw_shader('dissolve', nil, self.ARGS.send_to_shader, t, self.children.center, 0,0)
+							 -- Sprite:draw_shader(_shader, _shadow_height, _send, _no_tilt, other_obj, ms, mr, mx, my, custom_shader, tilt_shadow)
+			self.children.float2:draw_shader('dissolve',0, nil, t, self.children.center,scale_mod, rotate_mod,nil, 0.05 + 0.03*math.sin(1.8*aa),nil, 0.6)
+			self.children.float2:draw_shader('dissolve', nil, nil, t, self.children.center, scale_mod, rotate_mod)
+		
+		end
+		if self.children.back_float then
+			local cback = (not self.params.viewed_back and G.GAME.selected_back) or ( self.params.viewed_back and G.GAME.viewed_back) 
+			if cback then
+			
+				local t =( self.area and self.area.config.type == "deck") or self.config.center.set == "Back"
+				local scale_mod = 0.07 + 0.02*math.sin(1.8*G.TIMERS.REAL) + 0.00*math.sin((G.TIMERS.REAL - math.floor(G.TIMERS.REAL))*math.pi*14)*(1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL)))^3
+            	local rotate_mod = 0.05*math.sin(1.219*G.TIMERS.REAL) + 0.00*math.sin((G.TIMERS.REAL)*math.pi*5)*(1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL)))^2
 
-
-			self.children.back_float:draw_shader('dissolve',0, nil, nil, self.children.center,scale_mod, rotate_mod,nil, 0.1 + 0.03*math.sin(1.8*G.TIMERS.REAL),nil, 0.6)
-			self.children.back_float:draw_shader('dissolve', nil, nil, nil, self.children.center, scale_mod, rotate_mod)
-
-            if self.edition then 
-                for k, v in pairs(G.P_CENTER_POOLS.Edition) do
-                    if v.apply_to_float then
-                        if self.edition[v.key:sub(3)] then
-                            self.children.back_float:draw_shader(v.shader, nil, nil, nil, self.children.center, scale_mod, rotate_mod)
-                        end
-                    end
-                end
-            end
+				if t then self.ARGS.send_to_shader = {1.0,1.0} end
+			--self.children.back:draw_shader('voucher',0, nil, t, self.children.center,scale_mod, rotate_mod,nil, 0.1 + 0.03*math.sin(1.8*G.TIMERS.REAL),nil, 0.6)
+			
+			--self.children.back_float:draw_shader('dissolve', nil, self.ARGS.send_to_shader, t, self.children.center, 0,0)
+			self.children.back_float:draw_shader('dissolve',0, nil, t, self.children.center,scale_mod, rotate_mod,nil, 0.1 + 0.03*math.sin(1.8*G.TIMERS.REAL),nil, 0.6)
+			self.children.back_float:draw_shader('dissolve', nil, nil, t, self.children.center, scale_mod, rotate_mod)
+		
         end
+	end
+	
+end
     end,
     conditions = { vortex = false, facing = 'back' },
 }
@@ -324,22 +343,34 @@ SMODS.DrawStep {
 local cssref = Card.set_sprites
 
 function  Card:set_sprites(_center,_front)
+	local cback =self.params.galdur_back or (not self.params.viewed_back and G.GAME.selected_back) or ( self.params.viewed_back and G.GAME.viewed_back)
 	local ret = cssref(self,_center,_front)
-	if _center and _center.set then 
-		if  G.GAME.selected_back and G.GAME.selected_back.effect.center.float_pos or _center.float_pos  then
-			if _center.float_pos or _center.set ~= "Back" or (self.back == "viewed_back" and G.GAME.viewed_back.effect.center.float_pos) then
+	if _center and _center.set and _center.set ~= "Sleeve" 
+			and not self.params.stake_chip then 
+		if  cback and cback.effect.center.float_pos or _center.float_pos  then
+			
 				if self.children.back_float then self.children.back_float:remove() end
-				self.children.back_float = Sprite(self.T.x, self.T.y, self.T.w, self.T.h,  G.ASSET_ATLAS[(G.GAME.viewed_back or G.GAME.selected_back) and ((G.GAME.viewed_back or G.GAME.selected_back)[G.SETTINGS.colourblind_option and 'hc_atlas' or 'lc_atlas'] or (G.GAME.viewed_back or G.GAME.selected_back).atlas) or 'centers'],_center.float_pos or G.GAME.selected_back.effect.center.float_pos  )
+				self.children.back_float = Sprite(self.T.x, self.T.y, self.T.w, self.T.h,  G.ASSET_ATLAS[cback[G.SETTINGS.colourblind_option and 'hc_atlas' or 'lc_atlas'] or cback.atlas or 'centers'],cback.effect.center.float_pos or _center.float_pos)
 				
 				self.children.back_float:set_role({major = self, role_type = 'Glued', draw_major = self})
 				self.children.back_float.role.draw_major = self
-				if self.area == G.deck then
-					self.children.back_float.role.draw_major = nil
-				end
 				self.children.back_float.states.visible = false
 				self.children.back_float.states.hover.can = false
 				self.children.back_float.states.click.can = false
-			end
+			
+		end
+	
+		if  cback and cback.effect.center.float2 or _center.float2  then
+			
+				if self.children.float2 then self.children.float2:remove() end
+				self.children.float2 = Sprite(self.T.x, self.T.y, self.T.w, self.T.h,  G.ASSET_ATLAS[cback[G.SETTINGS.colourblind_option and 'hc_atlas' or 'lc_atlas'] or cback.atlas or 'centers'],cback.effect.center.float2 or _center.float2)
+				
+				self.children.float2:set_role({major = self, role_type = 'Glued', draw_major = self})
+				self.children.float2.role.draw_major = self
+				self.children.float2.states.visible = false
+				self.children.float2.states.hover.can = false
+				self.children.float2.states.click.can = false
+			
 		end
 	end
 	return ret
@@ -356,8 +387,9 @@ SMODS.Back {
 	unlocked = false,
 	config = {hands = 1, discards = 1,hand_size = 2, consumable_slot = -1,no_interest = true,ante_scaling = 1.4, dollars = 10},
 	atlas = "decks",
-	pos = { x = 0, y = 3},
-	--float_pos = {x=3,y=2}
+	pos = { x = 2, y = 2},
+	float_pos = {x=3,y=2},
+	float2 = {x=2,y=3}
 }
 
 
@@ -1081,16 +1113,14 @@ SMODS.Back {
 		return {_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append}
 	end
 }
-
+--[[
 SMODS.Back {
 	key = "midas",
 	atlas = "decks",
 	pos = {x=0,y=4},
-	dependencies = {
-		"najudbnawiudbawidvgawidagwidgwydhagwdkjyuawfgvd"
-	}
 }
 
+]]
 SMODS.Shader {key = "midas", path = "midas.fs"}
 
 SMODS.DrawStep {
@@ -1098,16 +1128,23 @@ SMODS.DrawStep {
     order = 60,
     func = function(self)
         if self.children.back then
-			do return end -- REMOVE ME!
-			if (((G.GAME.selected_back.name == "b_SGTMD_midas" and self.back == "selected_back") or (G.GAME.viewed_back.name == "b_SGTMD_midas" and self.back == "viewed_back")) 
-			and (self.config.center.set ~= "Back" and self.config.center.set ~= "Sleeve")) or self.config.center.key == "b_SGTMD_midas"
+			local cback = (not self.params.viewed_back and G.GAME.selected_back) or ( self.params.viewed_back and G.GAME.viewed_back) 
+			if cback then
+			
+			-- back is midas
+			if (cback.name == "b_SGTMD_midas" 
+			-- if this is a back or sleeve, ignore it
+			and (self.config.center.set ~= "Back" and self.config.center.set ~= "Sleeve"))
+			-- regardless of all conditionals, if this is midas deck continue
+			or self.config.center.key == "b_SGTMD_midas"
+			-- not the stake select from galdur or the stake chips
 			and not self.area.config.stake_select and not self.area.config.stake_chips then
-				local t = self.area.config.type == "deck" or self.config.center.set == "Back" 
-				if t then self.ARGS.send_to_shader = {0,0} end
+				local t =( self.area and self.area.config.type == "deck") or self.config.center.set == "Back" 
+				if t and not self.states.drag.is then self.ARGS.send_to_shader = {0,0} end
 			--self.children.back:draw_shader('voucher',0, nil, t, self.children.center,scale_mod, rotate_mod,nil, 0.1 + 0.03*math.sin(1.8*G.TIMERS.REAL),nil, 0.6)
 			self.children.back:draw_shader('SGTMD_midas', nil, self.ARGS.send_to_shader, t, self.children.center, 0,0)
 
-
+		end
         end
 	end
     end,
@@ -1119,8 +1156,8 @@ SMODS.Back {
 	
 	config = {hands = -1,hand_size = -1},
 	
-	atlas = "decks",
-	pos = {x=0,y=0},
+	--atlas = "decks",
+	--pos = {x=0,y=0},
 	apply = function(self)
 		G.E_MANAGER:add_event(Event({
             func = function()
@@ -1128,7 +1165,7 @@ SMODS.Back {
 					local edition = poll_edition('editions_deck', nil, nil, true)
 
 					if pseudorandom("editions_proc") >.2 then
-						v:set_edition(edition)
+						v:set_edition(edition,true,true)
 					end
 				end
                 return true
@@ -1136,13 +1173,48 @@ SMODS.Back {
         }))
 	end
 }
+--[[
+self.children.back:draw_shader('holo', nil, self.ARGS.send_to_shader, t, self.children.center, 0,0)
+self.children.back:draw_shader('foil', nil, self.ARGS.send_to_shader, t, self.children.center, 0,0)
+]]
+
+SMODS.Shader {key = "four", path = "four.fs"}
+SMODS.DrawStep {
+    key = 'edition_deck',
+    order = 60,
+    func = function(self)
+        if self.children.back then
+			local cback = (not self.params.viewed_back and G.GAME.selected_back) or ( self.params.viewed_back and G.GAME.viewed_back) 
+			if cback then
+			
+			-- back is midas
+			if (cback.name == "b_SGTMD_editions" 
+			-- if this is a back or sleeve, ignore it
+			and (self.config.center.set ~= "Back" and self.config.center.set ~= "Sleeve"))
+			-- regardless of all conditionals, if this is midas deck continue
+			or self.config.center.key == "b_SGTMD_editions"
+			-- not the stake select from galdur or the stake chips
+			and not self.area.config.stake_select and not self.area.config.stake_chips then
+				local t =( self.area and self.area.config.type == "deck") or self.config.center.set == "Back" 
+				if t and not self.states.drag.is then self.ARGS.send_to_shader = {1.0,1.0} end
+			--self.children.back:draw_shader('voucher',0, nil, t, self.children.center,scale_mod, rotate_mod,nil, 0.1 + 0.03*math.sin(1.8*G.TIMERS.REAL),nil, 0.6)
+			
+			self.children.back:draw_shader('SGTMD_four', nil, self.ARGS.send_to_shader, t, self.children.center, 0,0)
+			
+		end
+        end
+	end
+    end,
+    conditions = { vortex = false, facing = 'back' },
+}
+
 SMODS.Back {
 	key = "seals",
 	
 	config = {hands = -1,hand_size = -1},
 	
 	atlas = "decks",
-	pos = {x=0,y=0},
+	pos = {x=1,y=4},
 	apply = function(self)
 		G.E_MANAGER:add_event(Event({
             func = function()
@@ -1150,7 +1222,7 @@ SMODS.Back {
 					local seal = SMODS.poll_seal({ guaranteed = true, type_key = 'seals_deck' })
 
 					if pseudorandom("seals_proc") >.2 then
-						v:set_seal(seal)
+						v:set_seal(seal,true,true)
 					end
 				end
                 return true
@@ -1165,7 +1237,7 @@ SMODS.Back {
 	config = {hands = -1,hand_size = -1},
 	
 	atlas = "decks",
-	pos = {x=0,y=0},
+	pos = {x=2,y=4},
 	apply = function(self)
 		G.E_MANAGER:add_event(Event({
             func = function()
