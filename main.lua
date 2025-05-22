@@ -1417,7 +1417,7 @@ SMODS.Back {
 	end,
 	apply = function (self, back)
 		G.GAME.starting_params.dollars = G.GAME.starting_params.dollars + (G.PROFILES[G.SETTINGS.profile].SGTMD_wins or 0)*2
-		G.GAME.starting_params.joker_slots = G.GAME.starting_params.joker_slots + (G.PROFILES[G.SETTINGS.profile].SGTMD_wins or 0)fdkuy
+		G.GAME.starting_params.joker_slots = G.GAME.starting_params.joker_slots + (G.PROFILES[G.SETTINGS.profile].SGTMD_wins or 0)
 	end,
 	calculate = function (self, back, context)
 		if context.win then
