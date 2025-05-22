@@ -53,9 +53,6 @@ return {
                     "{C:red}-1{} consumeable slot",
                     "Earn no {C:attention}Interest{}"
                 },
-
-            
-           
                 unlock = {"Win a run with","{C:attention}Fuck you{}","on any difficulty"}
             },
             b_SGTMD_storage = {
@@ -238,6 +235,32 @@ return {
                     "Every playing card can start",
                     "with a random {C:dark_edition}Enhancement",
                     "{C:red}-1 {C:blue}Hand{} & {C:attention}Hand Size"
+                }
+            },
+            b_SGTMD_tuna = {
+                name = "Tuna Deck",
+                text = {
+                    "{C:tarot}Consumables{} inside","{C:attention}Booster Packs",
+                    "will be added to your","{C:attention}Consumable slots",
+                    "{C:attention}when used",
+                    "{C:inactive(Must have room)}"
+                }
+            },
+            b_SGTMD_contract = {
+                name = "Contractors Deck",
+                text = {
+                    "{C:attention}Retriggers{} your leftmost","{C:attention}Joker{} once",
+                    "{C:blue,T:j_blueprint}Blueprint{} is more","likely to appear"
+                }
+            },
+            b_SGTMD_champ = {
+                name = "Champions Deck",
+                text = {
+                    "Start with extra {C:money}$#1#{}",
+                    "{C:white,X:mult}X#2#{} mult",
+                    "{C:attention}+#3#{} extra joker slot#4#",
+                    "{C:inactive}(All values SCALE upon win)",
+                    "{C:inactive}(All values RESET upon loss)"
                 }
             }
         },

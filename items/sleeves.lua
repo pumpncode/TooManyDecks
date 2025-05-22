@@ -387,7 +387,6 @@ CardSleeves.Sleeve {
         local key
         if self.get_current_deck_key() == "b_SGTMD_fuckyou" then
             key = self.key .. "_alt"
-            -- this doesnt apply please fix future me ok thx enjoy your rest gnnnnnnnnn 
 
 
 
@@ -404,6 +403,7 @@ CardSleeves.Sleeve {
     
     atlas = "decks sleeves",
     pos = { x = 4, y = 0},
+    
     apply = function(self)
         CardSleeves.Sleeve.apply(self)
         if not self.config.no_interest then
@@ -452,7 +452,7 @@ end,
 
 SMODS.Atlas {
     key = "prosleeve",
-    px = 73                                                                                                                         ,
+    px = 73,
     py = 95,
     path = "prosleeve.png"
 }
@@ -674,9 +674,10 @@ CardSleeves.Sleeve {
             SMODS.setup_stake(G.GAME.stake)
         end
     end,
-    card_creation = function(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append, created_card)
-		if created_card or _type ~= "Joker" or forced_key then return end
-		if pseudorandom("rofdeckya") > 0.85 then return end
+	card_creation = function(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append, created_card)
+		if created_card or _type ~= "Joker" then return nil end
+		if pseudorandom("rofdeckya") > 0.65 then return nil end
+		if forced_key and pseudorandom("rofedeckforce") >=0.25 then return nil end
 
 		if pseudorandom("roffledeck") >.5 then
 			forced_key = "j_photograph"

@@ -26,16 +26,62 @@ SMODS.Atlas {
 	frames = 21
 }
 
+SMODS.current_mod.optional_features = function ()
+	return {
+		retrigger_joker = true
+	}
+end
+
+
 to_number = to_number or function (x) return x end
 
 TMD = {}
+
+
+local cssref = Card.set_sprites
+
+function  Card:set_sprites(_center,_front)
+	local cback =self.params.galdur_back or (not self.params.viewed_back and G.GAME.selected_back) or ( self.params.viewed_back and G.GAME.viewed_back)
+	if _center and _center.set == "Back" then end
+	local ret = cssref(self,_center,_front)
+	if _center and _center.set and _center.set ~= "Sleeve" 
+			and not self.params.stake_chip then 
+		if  cback and cback.effect.center.float_pos or _center.float_pos  then
+			
+				if self.children.back_float then self.children.back_float:remove() end
+				self.children.back_float = Sprite(self.T.x, self.T.y, self.T.w, self.T.h,  G.ASSET_ATLAS[cback[G.SETTINGS.colourblind_option and 'hc_atlas' or 'lc_atlas'] or cback.atlas or 'centers'],cback.effect.center.float_pos or _center.float_pos)
+				
+				self.children.back_float:set_role({major = self, role_type = 'Glued', draw_major = self})
+				self.children.back_float.role.draw_major = self
+				self.children.back_float.states.visible = false
+				self.children.back_float.states.hover.can = false
+				self.children.back_float.states.click.can = false
+			
+		end
+	
+		if  cback and cback.effect.center.float2 or _center.float2  then
+			
+				if self.children.float2 then self.children.float2:remove() end
+				self.children.float2 = Sprite(self.T.x, self.T.y, self.T.w, self.T.h,  G.ASSET_ATLAS[cback[G.SETTINGS.colourblind_option and 'hc_atlas' or 'lc_atlas'] or cback.atlas or 'centers'],cback.effect.center.float2 or _center.float2)
+				
+				self.children.float2:set_role({major = self, role_type = 'Glued', draw_major = self})
+				self.children.float2.role.draw_major = self
+				self.children.float2.states.visible = false
+				self.children.float2.states.hover.can = false
+				self.children.float2.states.click.can = false
+			
+		end
+	end
+	return ret
+end
+
 
 -- Credit to cryptid
 local oldfunc = Game.main_menu
 Game.main_menu = function(change_context)
 	local ret = oldfunc(change_context)
 	local bbb = "b_SGTMD_argyle"
-	if math.random() < 0.1 then
+	if math.random() == -1 then
 		bbb = "b_SGTMD_prodeck"
 	end
 	local newcard = Card(
@@ -45,7 +91,7 @@ Game.main_menu = function(change_context)
 		G.CARD_H,
 		G.P_CARDS.empty,
 		G.P_CENTERS[bbb],
-		{ bypass_discovery_center = true }
+		{ bypass_discovery_center = true, }
 	)
 	-- recenter the title
 	if not Cryptid then
@@ -54,11 +100,13 @@ Game.main_menu = function(change_context)
 	end
 
 	G.title_top:emplace(newcard)
+
 	-- make the card look the same way as the title screen Ace of Spades
 	newcard.T.w = newcard.T.w * 1.1 * 1.2
 	newcard.T.h = newcard.T.h * 1.1 * 1.2
 	newcard.no_ui = true
 	newcard.states.visible = false
+	newcard:set_sprites()
 
 
 	G.E_MANAGER:add_event(Event({
@@ -246,54 +294,7 @@ function set_deck_loss()
 	return ret
 end
 
-SMODS.Back {
-	key = "fuckyou",
-	locked_loc_vars = function (self, info_queue, card)
-		return { vars = { (G.GAME.probabilities.normal or 1)}}
-	end,
-	
-	unlocked = false,
-	check_for_unlock = function (self, args)
-		if args.type == "loss" and pseudorandom("fuckyou") < G.GAME.probabilities.normal / 15 then
-			return true
-		end
-		
-	end,
-	atlas = "decks",
-	pos = { x = 0, y = 2},
-	
-	apply = function(self)
-        G.E_MANAGER:add_event(Event({
-            func = function()
-				SMODS.add_card { key = 'j_popcorn' }
-				local ante_UI = G.hand_text_area.ante
-				G.GAME.round_resets.ante = 0
-				G.GAME.round_resets.ante_disp = number_format(G.GAME.round_resets.ante)
-				ante_UI.config.object:update()
-				G.HUD:recalculate()
-            	local newcards = {}
-                for i = 1, #G.playing_cards do
-  					local card = G.playing_cards[1]
-					G.deck:remove_card(card)
-					card:remove()
-                    
-                end
-                card = create_playing_card({front = G.P_CARDS.S_K},G.deck)
-                return true
-            end
-        }))
-		
-    end,
-	calculate = function(self, card, context)
 
-		 if context.final_scoring_step then
-			return{
-				xmult = 0.5
-			}
-		 end
-		
-	end
-}
 
 SMODS.DrawStep {
     key = 'float_back',
@@ -340,41 +341,99 @@ end
     conditions = { vortex = false, facing = 'back' },
 }
 
-local cssref = Card.set_sprites
-
-function  Card:set_sprites(_center,_front)
-	local cback =self.params.galdur_back or (not self.params.viewed_back and G.GAME.selected_back) or ( self.params.viewed_back and G.GAME.viewed_back)
-	local ret = cssref(self,_center,_front)
-	if _center and _center.set and _center.set ~= "Sleeve" 
-			and not self.params.stake_chip then 
-		if  cback and cback.effect.center.float_pos or _center.float_pos  then
+SMODS.DrawStep {
+    key = 'float_back2',
+    order = 60,
+    func = function(self)
+		if self.children.float2 then
+			local cback = (not self.params.viewed_back and G.GAME.selected_back) or ( self.params.viewed_back and G.GAME.viewed_back) 
+			if cback and self.area == G.title_top then
 			
-				if self.children.back_float then self.children.back_float:remove() end
-				self.children.back_float = Sprite(self.T.x, self.T.y, self.T.w, self.T.h,  G.ASSET_ATLAS[cback[G.SETTINGS.colourblind_option and 'hc_atlas' or 'lc_atlas'] or cback.atlas or 'centers'],cback.effect.center.float_pos or _center.float_pos)
-				
-				self.children.back_float:set_role({major = self, role_type = 'Glued', draw_major = self})
-				self.children.back_float.role.draw_major = self
-				self.children.back_float.states.visible = false
-				self.children.back_float.states.hover.can = false
-				self.children.back_float.states.click.can = false
-			
-		end
+				local t =( self.area and self.area.config.type == "deck") or self.config.center.set == "Back"
+				local aa = G.TIMERS.REAL + 1.5
+				local scale_mod = 0.02 + 0.02*math.sin(1.8*aa) + 0.00*math.sin((aa - math.floor(aa))*math.pi*14)*(1 - (aa - math.floor(aa)))^2.5
+				local rotate_mod = 0.05*math.sin(1.219*aa) + 0.00*math.sin((aa)*math.pi*5)*(1 - (aa - math.floor(aa)))^2
 	
-		if  cback and cback.effect.center.float2 or _center.float2  then
+				if t then self.ARGS.send_to_shader = {1.0,1.0} end
+			--self.children.back:draw_shader('voucher',0, nil, t, self.children.center,scale_mod, rotate_mod,nil, 0.1 + 0.03*math.sin(1.8*aa),nil, 0.6)
 			
-				if self.children.float2 then self.children.float2:remove() end
-				self.children.float2 = Sprite(self.T.x, self.T.y, self.T.w, self.T.h,  G.ASSET_ATLAS[cback[G.SETTINGS.colourblind_option and 'hc_atlas' or 'lc_atlas'] or cback.atlas or 'centers'],cback.effect.center.float2 or _center.float2)
-				
-				self.children.float2:set_role({major = self, role_type = 'Glued', draw_major = self})
-				self.children.float2.role.draw_major = self
-				self.children.float2.states.visible = false
-				self.children.float2.states.hover.can = false
-				self.children.float2.states.click.can = false
-			
+			--self.children.float2:draw_shader('dissolve', nil, self.ARGS.send_to_shader, t, self.children.center, 0,0)
+							 -- Sprite:draw_shader(_shader, _shadow_height, _send, _no_tilt, other_obj, ms, mr, mx, my, custom_shader, tilt_shadow)
+			self.children.float2:draw_shader('dissolve',0, nil, t, self.children.center,scale_mod, rotate_mod,nil, 0.05 + 0.03*math.sin(1.8*aa),nil, 0.6)
+			self.children.float2:draw_shader('dissolve', nil, nil, t, self.children.center, scale_mod, rotate_mod)
+		
 		end
+		if self.children.back_float then
+			local cback = (not self.params.viewed_back and G.GAME.selected_back) or ( self.params.viewed_back and G.GAME.viewed_back) 
+			if cback and self.area == G.title_top then
+			
+				local t =( self.area and self.area.config.type == "deck") or self.config.center.set == "Back"
+				local scale_mod = 0.07 + 0.02*math.sin(1.8*G.TIMERS.REAL) + 0.00*math.sin((G.TIMERS.REAL - math.floor(G.TIMERS.REAL))*math.pi*14)*(1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL)))^3
+            	local rotate_mod = 0.05*math.sin(1.219*G.TIMERS.REAL) + 0.00*math.sin((G.TIMERS.REAL)*math.pi*5)*(1 - (G.TIMERS.REAL - math.floor(G.TIMERS.REAL)))^2
+
+				if t then self.ARGS.send_to_shader = {1.0,1.0} end
+			--self.children.back:draw_shader('voucher',0, nil, t, self.children.center,scale_mod, rotate_mod,nil, 0.1 + 0.03*math.sin(1.8*G.TIMERS.REAL),nil, 0.6)
+			
+			--self.children.back_float:draw_shader('dissolve', nil, self.ARGS.send_to_shader, t, self.children.center, 0,0)
+			self.children.back_float:draw_shader('dissolve',0, nil, t, self.children.center,scale_mod, rotate_mod,nil, 0.1 + 0.03*math.sin(1.8*G.TIMERS.REAL),nil, 0.6)
+			self.children.back_float:draw_shader('dissolve', nil, nil, t, self.children.center, scale_mod, rotate_mod)
+		
+        end
 	end
-	return ret
+	
 end
+    end,
+    conditions = { vortex = false, facing = 'front' },
+}
+
+SMODS.Back {
+	key = "fuckyou",
+	locked_loc_vars = function (self, info_queue, card)
+		return { vars = { (G.GAME.probabilities.normal or 1)}}
+	end,
+	
+	unlocked = false,
+	check_for_unlock = function (self, args)
+		if args.type == "loss" and pseudorandom("fuckyou") < G.GAME.probabilities.normal / 15 then
+			return true
+		end
+		
+	end,
+	atlas = "decks",
+	pos = { x = 0, y = 2},
+	float_pos = {x=0,y=0},
+	apply = function(self)
+        G.E_MANAGER:add_event(Event({
+            func = function()
+				SMODS.add_card { key = 'j_popcorn' }
+				local ante_UI = G.hand_text_area.ante
+				G.GAME.round_resets.ante = 0
+				G.GAME.round_resets.ante_disp = number_format(G.GAME.round_resets.ante)
+				ante_UI.config.object:update()
+				G.HUD:recalculate()
+            	local newcards = {}
+                for i = 1, #G.playing_cards do
+  					local card = G.playing_cards[1]
+					G.deck:remove_card(card)
+					card:remove()
+                    
+                end
+                card = create_playing_card({front = G.P_CARDS.S_K},G.deck)
+                return true
+            end
+        }))
+		
+    end,
+	calculate = function(self, card, context)
+
+		 if context.final_scoring_step then
+			return{
+				xmult = 0.5
+			}
+		 end
+		
+	end
+}
 
 SMODS.Back {
 	key = "prodeck",
@@ -388,6 +447,7 @@ SMODS.Back {
 	config = {hands = 1, discards = 1,hand_size = 2, consumable_slot = -1,no_interest = true,ante_scaling = 1.4, dollars = 10},
 	atlas = "decks",
 	pos = { x = 2, y = 2},
+	
 	float_pos = {x=3,y=2},
 	float2 = {x=2,y=3}
 }
@@ -485,7 +545,8 @@ SMODS.Back {
         }))
 	end
 }
-
+--[[
+i couldnt be bothered to fix this deck lmao
 SMODS.Back {
 	key = "buno",
 	
@@ -507,7 +568,13 @@ SMODS.Back {
             func = function()
             	
                 for _,card in ipairs(G.playing_cards) do
+					if SMODS.Ranks["SGTMD_B" .. card.base.value] then
 					assert(SMODS.change_base(card, nil, "SGTMD_B" .. card.base.value))
+					end
+					if SMODS.Suits["SGTMD_B" .. card.base.suit] then
+					assert(SMODS.change_base(card, "SGTMD_B" .. card.base.suit))
+					end
+
                 end
                 return true
             end
@@ -538,7 +605,7 @@ SMODS.Back {
 }
 
 assert(SMODS.load_file("items/buno.lua"))()
-
+]]
 
 local flip_ref = Card.update
 function Card:update(dt)
@@ -1011,8 +1078,39 @@ SMODS.Back {
 		end
 	end
 }
+--[[
 
+SMODS.Shader {key = "wild", path = "wild.fs"}
 
+SMODS.DrawStep {
+    key = 'wild_deck',
+    order = 60,
+    func = function(self)
+        if self.children.back then
+			local cback = (not self.params.viewed_back and G.GAME.selected_back) or ( self.params.viewed_back and G.GAME.viewed_back) 
+			if cback then
+			
+			-- back is midas
+			if (cback.name == "b_SGTMD_wild" 
+			-- if this is a back or sleeve, ignore it
+			and (self.config.center.set ~= "Back" and self.config.center.set ~= "Sleeve"))
+			-- regardless of all conditionals, if this is midas deck continue
+			or self.config.center.key == "b_SGTMD_wild"
+			-- not the stake select from galdur or the stake chips
+			and not self.area.config.stake_select and not self.area.config.stake_chips then
+				local t =( self.area and self.area.config.type == "deck") or self.config.center.set == "Back" 
+				if t and not self.states.drag.is then self.ARGS.send_to_shader = {0,0} end
+			--self.children.back:draw_shader('voucher',0, nil, t, self.children.center,scale_mod, rotate_mod,nil, 0.1 + 0.03*math.sin(1.8*G.TIMERS.REAL),nil, 0.6)
+			self.children.back:draw_shader('SGTMD_wild', nil, self.ARGS.send_to_shader, t, self.children.center, 0,0)
+
+		end
+        end
+	end
+    end,
+    conditions = { vortex = false, facing = 'back' },
+}
+
+]]
 
 local ccr = create_card
 
@@ -1099,8 +1197,9 @@ SMODS.Back {
 	atlas = "lookinside",
 	pos = {x=0,y=0},
 	card_creation = function(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append, created_card)
-		if created_card or _type ~= "Joker" or forced_key then return nil end
-		if pseudorandom("rofdeckya") > 0.85 then return nil end
+		if created_card or _type ~= "Joker" then return nil end
+		if pseudorandom("rofdeckya") > 0.65 then return nil end
+		if forced_key and pseudorandom("rofedeckforce") >=0.25 then return nil end
 
 		if pseudorandom("roffledeck") >.5 then
 			forced_key = "j_photograph"
@@ -1254,7 +1353,89 @@ SMODS.Back {
 	end
 }
 
+SMODS.Back {
+	key = "tuna",
+	atlas = "decks",
+	pos = {x=3,y=4},
+	calculate = function (self, back, context)
+		if context.using_consumeable and context.area == G.pack_cards then
+			if #G.consumeables.cards < G.consumeables.config.card_limit + (context.consumeable.edition and context.consumeable.edition.negative and 1 or 0) then
+			G.E_MANAGER:add_event(Event({
+				func = function ()
+					G.consumeables:emplace(copy_card(context.consumeable))
+					return true
+				end
+			}))
+		end
+		end
+	end
+}
 
+
+SMODS.Back {
+	key = "contract",
+	atlas = "decks",
+	pos = {x=4,y=4},
+	calculate = function (self, back, context)
+		if context.retrigger_joker_check and not context.retrigger_joker then
+			if context.other_card == G.jokers.cards[1] then
+				return {
+					message = "Again!",
+					colour = G.C.BLUE,
+					repetitions = 1,
+					message_card = card
+				}
+			end
+		end
+	end,
+	card_creation = function(_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append, created_card)
+		if created_card or _type ~= "Joker" then return nil end
+		if _type == "Joker" and (next(SMODS.find_card("j_ring_master")) or (not next(SMODS.find_card("j_blueprint",true)))) and not forced_key then
+			if  pseudorandom("Contractor") <= 0.05 then
+				forced_key = "j_blueprint"
+				return {_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append}
+			else
+
+				return nil
+			end
+			else
+				return nil
+			end
+
+
+		
+	end
+}
+
+SMODS.Back {
+	key = "champ",
+	atlas = "decks",
+	pos = {x=5,y=4},
+	loc_vars = function (self, info_queue, card)
+		local wins = G.PROFILES[G.SETTINGS.profile].SGTMD_wins or 0
+		return {vars = {wins*2,(wins*0.5)+1,wins,wins~=1 and "s" or ""}}
+	end,
+	apply = function (self, back)
+		G.GAME.starting_params.dollars = G.GAME.starting_params.dollars + (G.PROFILES[G.SETTINGS.profile].SGTMD_wins or 0)*2
+		G.GAME.starting_params.joker_slots = G.GAME.starting_params.joker_slots + (G.PROFILES[G.SETTINGS.profile].SGTMD_wins or 0)fdkuy
+	end,
+	calculate = function (self, back, context)
+		if context.win then
+			G.PROFILES[G.SETTINGS.profile].SGTMD_wins = (G.PROFILES[G.SETTINGS.profile].SGTMD_wins or 0) + 1
+			G:save_progress()
+		end
+		if context.end_of_round and context.game_over then
+			G.PROFILES[G.SETTINGS.profile].SGTMD_wins =  0
+			G:save_progress()
+		end
+		if context.final_scoring_step then
+			return {
+				xmult = (G.PROFILES[G.SETTINGS.profile].SGTMD_wins or 0)*0.5+1
+			}
+		end
+		
+	end
+}
 
 assert(SMODS.load_file("items/iamgoingtohaveaheadache.lua"))()
 if CardSleeves then assert(SMODS.load_file("items/sleeves.lua"))() end

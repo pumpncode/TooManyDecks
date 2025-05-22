@@ -14,6 +14,88 @@ SMODS.Atlas {
 	path = "buno1.png"
 }
 
+SMODS.Atlas {
+	key = "bunoui",
+	path = "bunoui1.png",
+	px = 18,
+	py = 18
+}
+
+SMODS.Atlas {
+	key = "bunouihc",
+	path = "bunoui2.png",
+	px = 18,
+	py = 18
+}
+
+SMODS.Suit {
+	key = "BSpades",
+	card_key = "BSpades",
+	pos = {y=3},
+	ui_pos = {x=3,y=0},
+	loc_txt = {singular = "Spade", plural = "Spades"},
+	lc_atlas = "bunocards",
+	hc_atlas = "hcbunocards",
+	lc_ui_atlas = "bunoui",
+	hc_ui_atlas = "bunouihc",
+	lc_colour = HEX("3c4368"),
+	hc_colour = HEX("0171bb"),
+	in_pool = function (self, args)
+		return false
+	end
+}
+
+SMODS.Suit {
+	key = "BHearts",
+	card_key = "BHearts",
+	pos = {y=0},
+	ui_pos = {x=0,y=0},
+	loc_txt = {singular = "Heart", plural = "Hearts"},
+	lc_atlas = "bunocards",
+	hc_atlas = "hcbunocards",
+	lc_ui_atlas = "bunoui",
+	hc_ui_atlas = "bunouihc",
+	lc_colour = HEX("f03464"),
+	hc_colour = HEX("ed1b24"),
+	in_pool = function (self, args)
+		return false
+	end
+}
+
+SMODS.Suit {
+	key = "BClubs",
+	card_key = "BClubs",
+	pos = {y=1},
+	ui_pos = {x=2,y=0},
+	loc_txt = {singular = "Club", plural = "Clubs"},
+	lc_atlas = "bunocards",
+	hc_atlas = "hcbunocards",
+	lc_ui_atlas = "bunoui",
+	hc_ui_atlas = "bunouihc",
+	lc_colour = HEX("235955"),
+	hc_colour = HEX("51a744"),
+	in_pool = function (self, args)
+		return false
+	end
+}
+
+SMODS.Suit {
+	key = "BDiamonds",
+	card_key = "BDiamonds",
+	pos = {y=2},
+	ui_pos = {x=1,y=0},
+	loc_txt = {singular = "Diamond", plural = "Diamonds"},
+	lc_atlas = "bunocards",
+	hc_atlas = "hcbunocards",
+	lc_ui_atlas = "bunoui",
+	hc_ui_atlas = "bunouihc",
+	lc_colour = HEX("f06b3f"),
+	hc_colour = HEX("e0ce00"),
+	in_pool = function (self, args)
+		return false
+	end
+}
+
 SMODS.Rank {
 	key = "B10",
 	card_key = "B10",
@@ -22,9 +104,10 @@ SMODS.Rank {
 	hc_atlas = "hcbunocards",
 	loc_txt = {name = "Zero"},
 	shorthand = "0",
-	nominal = 1,
 	face_nominal = 0,
+	nominal = 1,
 	next = {"SGTMD_BAce"},
+	
 	in_pool = function (self, args)
 		return false
 	end
@@ -37,135 +120,15 @@ SMODS.Rank {
 	lc_atlas = "bunocards",
 	hc_atlas = "hcbunocards",
 	loc_txt = {name = "One"},
-	shorthand = "A",
-	face_nominal = 1,
+	shorthand = "1",
+	face_nominal = 0,
 	nominal = 1,
-	next = {"SGTMD_B2"},
+	next = {"2"},
+	
 	in_pool = function (self, args)
 		return false
 	end
 }
-
-SMODS.Rank {
-	key = "B2",
-	card_key = "B2",
-	pos = {x=0},
-	lc_atlas = "bunocards",
-	hc_atlas = "hcbunocards",
-	loc_txt = {name = "Two"},
-	shorthand = "2",
-	nominal = 2,
-	next = {"SGTMD_B3"},
-	in_pool = function (self, args)
-		return false
-	end
-}
-
-SMODS.Rank {
-	key = "B3",
-	card_key = "B3",
-	pos = {x=1},
-	lc_atlas = "bunocards",
-	hc_atlas = "hcbunocards",
-	loc_txt = {name = "Three"},
-	shorthand = "3",
-	nominal = 3,
-	next = {"SGTMD_B4"},
-	in_pool = function (self, args)
-		return false
-	end
-}
-
-SMODS.Rank {
-	key = "B4",
-	card_key = "B4",
-	pos = {x=2},
-	lc_atlas = "bunocards",
-	hc_atlas = "hcbunocards",
-	loc_txt = {name = "Four"},
-	shorthand = "4",
-	nominal = 4,
-	next = {"SGTMD_B5"},
-	in_pool = function (self, args)
-		return false
-	end
-}
-
-SMODS.Rank {
-	key = "B5",
-	card_key = "B5",
-	pos = {x=3},
-	lc_atlas = "bunocards",
-	hc_atlas = "hcbunocards",
-	loc_txt = {name = "Five"},
-	shorthand = "5",
-	nominal = 5,
-	next = {"SGTMD_B6"},
-	in_pool = function (self, args)
-		return false
-	end
-}
-
-SMODS.Rank {
-	key = "B6",
-	card_key = "B6",
-	pos = {x=4},
-	lc_atlas = "bunocards",
-	hc_atlas = "hcbunocards",
-	loc_txt = {name = "Six"},
-	shorthand = "6",
-	nominal = 6,
-	next = {"SGTMD_B7"},
-	in_pool = function (self, args)
-		return false
-	end
-}
-
-SMODS.Rank {
-	key = "B7",
-	card_key = "B7",
-	pos = {x=5},
-	lc_atlas = "bunocards",
-	hc_atlas = "hcbunocards",
-	loc_txt = {name = "Seven"},
-	shorthand = "7",
-	nominal = 7,
-	next = {"SGTMD_B8"},
-	in_pool = function (self, args)
-		return false
-	end
-}
-
-SMODS.Rank {
-	key = "B8",
-	card_key = "B8",
-	pos = {x=6},
-	lc_atlas = "bunocards",
-	hc_atlas = "hcbunocards",
-	loc_txt = {name = "Eight"},
-	shorthand = "8",
-	nominal = 8,
-	next = {"SGTMD_B9"},
-	in_pool = function (self, args)
-		return false
-	end
-}
-
-SMODS.Rank {
-	key = "B9",
-	card_key = "B9",
-	pos = {x=7},
-	lc_atlas = "bunocards",
-	hc_atlas = "hcbunocards",
-	loc_txt = {name = "Nine"},
-	shorthand = "9",
-	nominal = 9,
-	next = {"SGTMD_B10"},
-	in_pool = function (self, args)
-		return false
-	end
-}
-
 
 
 SMODS.Rank {
