@@ -1421,12 +1421,15 @@ SMODS.Back {
 	end,
 	calculate = function (self, back, context)
 		if context.win then
+			G.GAME.SGTMD_WON = true
 			G.PROFILES[G.SETTINGS.profile].SGTMD_wins = (G.PROFILES[G.SETTINGS.profile].SGTMD_wins or 0) + 1
 			G:save_progress()
 		end
 		if context.end_of_round and context.game_over then
+			if not G.GAME.SGTMD_WON then
 			G.PROFILES[G.SETTINGS.profile].SGTMD_wins =  0
 			G:save_progress()
+			end
 		end
 		if context.final_scoring_step then
 			return {
