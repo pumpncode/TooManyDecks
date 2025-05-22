@@ -17,3 +17,14 @@ payload = '''        if G.GAME.selected_back.name ~= "b_SGTMD_throwback" then
         end
     end'''
 match_indent = false
+
+[[patches]]
+[patches.pattern]
+target = 'functions/state_events.lua'
+pattern = '''function win_game()
+    if (not G.GAME.seeded and not G.GAME.challenge) or SMODS.config.seeded_unlocks then'''
+position = 'after'
+payload = '''
+        if G.GAME.selected_back.effect.center.calculate then G.GAME.selected_back.effect.center.calculate(G.GAME.selected_back.effect.center,nil,{win = true}) end
+'''
+match_indent = true
