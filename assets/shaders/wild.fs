@@ -90,6 +90,7 @@ vec4 effect( vec4 colour, Image texture, vec2 texture_coords, vec2 screen_coords
     number high = max(tex.r, max(tex.g, tex.b));
     number delta = high-low -0.1;
 	
+
     if (uv.x > uv.x * 2.){
         uv = wild;
     }
@@ -97,16 +98,20 @@ vec4 effect( vec4 colour, Image texture, vec2 texture_coords, vec2 screen_coords
     
 	vec4 hslt = HSL(tex);
     
-    //vec3 ext = vec3(0,1,1);
-
-    hslt.r = ext.r;
+    number ga = sin((wild.r-.2) +(uv.r*uv.g));
+    number sat = hslt.g;
+    vec4 cha = (vec4(4/360,.99,.66,0) * ga) + (vec4(190/360,.13,.36,0) * (ga-1));
+    cha.a = hslt.a;
+    hslt = (cha*sat)+(hslt*(sat-1));
+    
+    
 
 	tex = RGB(hslt);
 
    
 
     // required
-    return dissolve_mask(tex*colour, texture_coords, uv);
+    return dissolve_mask(tex, texture_coords, uv);
 }
 
 vec4 dissolve_mask(vec4 tex, vec2 texture_coords, vec2 uv)

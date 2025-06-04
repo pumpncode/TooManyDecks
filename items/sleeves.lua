@@ -690,3 +690,72 @@ CardSleeves.Sleeve {
 		return {_type, area, legendary, _rarity, skip_materialize, soulable, forced_key, key_append}
 	end
 }
+
+CardSleeves.Sleeve {
+    key = "midas",
+	atlas = "decks sleeves",
+	pos = {x=4,y=2},
+    loc_vars = function(self)
+        local key
+        if self.get_current_deck_key() == "b_SGTMD_midas" then
+            key = self.key .. "_alt"
+            
+            self.config = {vouchers = {"v_money_tree"}}
+        else
+            key = self.key
+            self.config = {vouchers = {"v_seed_money"}}
+        end
+        
+        return { key = key }
+        
+    end,
+	calculate = function (self, back, context)
+		if context.repetition and not context.repetition_only then
+			if SMODS.has_enhancement(context.other_card,"m_gold") then
+				return {
+					message = "Again!",
+					repetitions = 1,
+					card = context.other_card
+				}
+			end
+		end
+	end
+}
+
+CardSleeves.Sleeve {
+    key = "joker",
+    atlas = "decks sleeves",
+    pos = {x=4,y=1},
+    loc_vars = function(self)
+        local key
+        if self.get_current_deck_key() == "b_SGTMD_Joker" then
+            key = self.key .. "_alt"
+            
+            self.config = {hands = -2, joker_slot = 2}
+        else
+            key = self.key
+            self.config = {vouchers = {"v_reroll_surplus","v_overstock_norm"}}
+        end
+        
+        return { key = key }
+        
+    end,
+    apply = function (self)
+        CardSleeves.Sleeve.apply(self)
+		local banned = {
+			'p_celestial_normal_1','p_celestial_normal_2',"p_celestial_normal_3","p_celestial_normal_4","p_celestial_jumbo_1","p_celestial_jumbo_2","p_celestial_mega_1","p_celestial_mega_2"
+		,'p_standard_normal_1','p_standard_normal_2',"p_standard_normal_3","p_standard_normal_4","p_standard_jumbo_1","p_standard_jumbo_2","p_standard_mega_1","p_standard_mega_2"
+		,'p_arcana_normal_1','p_arcana_normal_2',"p_arcana_normal_3","p_arcana_normal_4","p_arcana_jumbo_1","p_arcana_jumbo_2","p_arcana_mega_1","p_arcana_mega_2"
+		,'p_spectral_normal_1','p_spectral_normal_2',"p_spectral_jumbo_1","p_spectral_mega_1",
+		"v_tarot_merchant","v_tarot_tycoon","v_planet_merchant","v_planet_tycoon","v_telescope","v_observatory","v_crystal_ball","v_omen_globe"}
+		for k,v in ipairs(banned) do
+			G.GAME.banned_keys[v] = true
+		end
+
+		G.E_MANAGER:add_event(Event({func = function()
+            G.GAME.tarot_rate = 0
+			G.GAME.planet_rate = 0
+			return true 
+		end }))
+	end
+}
