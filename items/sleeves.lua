@@ -731,15 +731,16 @@ CardSleeves.Sleeve {
         if self.get_current_deck_key() == "b_SGTMD_Joker" then
             key = self.key .. "_alt"
             
-            self.config = {hands = -2, joker_slot = 2}
+            self.config = {vouchers = {"v_reroll_surplus","v_overstock_norm"}}
         else
             key = self.key
-            self.config = {vouchers = {"v_reroll_surplus","v_overstock_norm"}}
+            self.config = {hands = -2, joker_slot = 2}
         end
         
         return { key = key }
         
     end,
+    config = {hands = -2, joker_slot = 2},
     apply = function (self)
         CardSleeves.Sleeve.apply(self)
 		local banned = {
