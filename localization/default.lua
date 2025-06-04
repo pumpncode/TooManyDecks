@@ -178,7 +178,7 @@ return {
                 name = "Stone Deck",
                 text = {
                     "Start with {C:attention}1 Joker slot{}",
-                    "{C:attention}+1 Joker slot {}for every {C:attention}10","{C:blue,T:m_stone}stone cards{} in deck"
+                    "{C:attention}+1 Joker slot {}for every {C:attention}2","{C:blue,T:m_stone}stone cards{} in deck"
                 },
                 
             },
@@ -210,7 +210,8 @@ return {
             b_SGTMD_midas = {
                 name = "Midas Deck",
                 text = {
-                    "adiuhgiduhgdiagwdioavwdiy"
+                    "Start run with {C:money,T:v_seed_money}Seed Money{}",
+                    "{C:attention,T:m_gold}Gold{} Cards {C:attention}are retriggered"
                 }
             },
             b_SGTMD_editions = {
@@ -261,6 +262,14 @@ return {
                     "{C:attention}+#3#{} extra joker slot#4#",
                     "{C:inactive}(All values SCALE upon win)",
                     "{C:inactive}(All values RESET upon loss)"
+                }
+            },
+            b_SGTMD_cheap = {
+                name = "Saving Deck",
+                text = {
+                    "Start run with",
+                    "{C:money,T:v_clearance_sale}Clearence Sale{},",
+                    "and {C:green,T:v_reroll_surplus}Reroll Surplus"
                 }
             }
         },
@@ -417,8 +426,37 @@ return {
                     "{C:green}> Look inside",
                     "{C:green}> {C:money}Gold Stake Balatro{}"
                 }
-            }
-        }
+            },
+            sleeve_SGTMD_midas = {
+                name = "Midas Sleeve",
+                text = {
+                    "Start run with {C:money,T:v_seed_money}Seed Money{}",
+                    "{C:attention,T:m_gold}Gold{} Cards {C:attention}are retriggered"
+                }
+            },
+            sleeve_SGTMD_midas_alt = {
+                name = "Midas Deck",
+                text = {
+                    "Start run with","{C:money,T:v_seed_money}Seed Money{} and {C:money,T:v_money_tree}Money Tree",
+                    "{C:attention,T:m_gold}Gold{} Cards {C:attention}are retriggered TWICE"
+                }
+            },
+            sleeve_SGTMD_joker = {
+                name = "Joker Sleeve",
+                text  = {
+                    "All jokers and buffon packs are free",
+                    "+2 joker slots",
+                    "Non-jokers no longer show up in shop",
+                    "{C:blue}-2{} hands every round"
+                }
+            },
+            sleeve_SGTMD_joker_alt = {
+                name = "Joker Sleeve",
+                text  = {
+                    "Additionally start run with",
+                    "{C:green,T:v_reroll_surplus}Reroll Surplus{} and {C:attention,T:v_overstock_norm}Overstock"
+                }
+            },
         },
         Blind={},
         Edition={},
@@ -456,6 +494,7 @@ return {
         v_dictionary={},
         v_text={},
     },
+}
 }
     
 

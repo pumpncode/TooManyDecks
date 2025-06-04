@@ -46,7 +46,8 @@ TMD.splashtext = {
     "past squid why would you do this to me",
     "burritos",
     "ball",
-    "ball"
+    "ball",
+    "find out to play what this does!"
 }
 
 
