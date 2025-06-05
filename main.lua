@@ -566,7 +566,7 @@ local cost_ref = Card.set_cost
 function Card:set_cost()
 	local ret = cost_ref(self)
 	if not G.GAME.selected_back then return ret end
-	if (self.ability.set == 'Joker' or (self.ability.set == 'Booster' and self.ability.name:find('Buffoon'))) and (G.GAME.selected_back.effect.center.key == "b_SGTMD_Joker" or G.GAME.selected_sleeve == "sleeve_SGTMD_Joker" ) then self.cost = 0 end
+	if (self.ability.set == 'Joker' or (self.ability.set == 'Booster' and self.ability.name:find('Buffoon'))) and (G.GAME.selected_back.effect.center.key == "b_SGTMD_Joker" or G.GAME.selected_sleeve == "sleeve_SGTMD_joker" ) then self.cost = 0 end
 	
 	return ret
 end
